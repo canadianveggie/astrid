@@ -3,6 +3,9 @@ module.exports = function (grunt) {
 	grunt.initConfig({
 		bower: {
 			install: {
+				options: {
+					targetDir: 'vendor'
+				}
 			}
 		}
 	});
