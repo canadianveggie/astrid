@@ -1,0 +1,15 @@
+{
+  "name": "astrid",
+  "version": "1.0.0",
+  "description": "Analytic System Tracking Rapid Infant Development",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christopher Porter <christopher.porter@yardi.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "grunt": "1.0.1",
+    "grunt-bower-task": "0.4.0"
+  }
+}
