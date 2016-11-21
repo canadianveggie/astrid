@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "chart.js": "^2.4.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "moment": "^2.16.0"
   }
 }
