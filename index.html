@@ -1,6 +1,15 @@
-<head>
-<title>ASTRID</title>
-</head>
-<body>
-	Testing
-</body>
+---
+layout: default
+description: Charts and stuff
+---
+
+
+<ul>
+{% for feed in site.data.feeds %}
+  <li>
+      {{ feed[" Start Time"] }}
+		-
+      {{ feed[" End Time"] }}
+  </li>
+{% endfor %}
+</ul>
