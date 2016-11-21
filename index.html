@@ -3,41 +3,37 @@ layout: default
 description: Charts and stuff
 ---
 
+<script src="{{ base_path }}vendor/moment/moment.js"></script>
 <script src="{{ base_path }}vendor/chart.js/Chart.js"></script>
 <script src="{{ base_path }}vendor/underscore/underscore.js"></script>
 <script src="{{ base_path }}js/data.js"></script>
 
 <canvas id="myChart" width="400" height="400"></canvas>
-<script>
+<script type="text/javascript">
+var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
+
+var naps = sleeps.naps.splice(0,10);
+var dates = _.pluck(naps, "Mid Time");
+var values = _.map(naps, function (nap) {
+	return parseInt(nap["Approximate Duration (Minutes)"]);
+});
+
 var ctx = document.getElementById("myChart");
 var myChart = new Chart(ctx, {
-    type: 'bar',
+    type: 'line',
     data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        labels: dates,
         datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
+            label: 'Naps',
+            data: values,
             borderWidth: 1
         }]
     },
     options: {
         scales: {
+        	xAxes:[{
+        		type: "time",
+        	}],
             yAxes: [{
                 ticks: {
                     beginAtZero:true
@@ -46,14 +42,6 @@ var myChart = new Chart(ctx, {
         }
     }
 });
-</script>
-
-
-<script type="text/javascript">
-	var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
-
-	console.log(sleeps.data);
-	console.log(sleeps.naps);
 </script>
 
 <ul>
