@@ -4,6 +4,8 @@ description: Charts and stuff
 ---
 
 <script src="vendor/chart.js/Chart.js"></script>
+<script src="vendor/underscore/underscore.js"></script>
+<script src="js/data.js"></script>
 
 <canvas id="myChart" width="400" height="400"></canvas>
 <script>
@@ -44,6 +46,14 @@ var myChart = new Chart(ctx, {
         }
     }
 });
+</script>
+
+
+<script type="text/javascript">
+	var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
+
+	console.log(sleeps.data);
+	console.log(sleeps.naps);
 </script>
 
 <ul>
