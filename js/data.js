@@ -1,6 +1,13 @@
 class Data {
 	constructor (data) {
-		this.data = data;
+		this.data = _.map(data, function (datum) {
+			let cleansed = {};
+			_.each(datum, function (value, key) {
+				// Add dates and remove leading spaces from keys
+				cleansed[key.trim()] = /date|time/i.test(key) ? new Date(value) : value;
+			});
+			return cleansed;
+		});
 	}
 }
 
@@ -26,7 +33,7 @@ class Sleeps extends Data {
 			}
 
 			sleep["Nap"] = sleep["Mid Time"].getHours() >= this.dayNightHour && sleep["Mid Time"].getHours() < this.dayNightHour + 12;
-		});
+		}, this);
 	}
 
 	get naps() {
