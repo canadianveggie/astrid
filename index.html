@@ -26,22 +26,22 @@ var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
 var sleepChart = document.getElementById('sleepChart');
 
 var data = _.map(sleeps.data, function (sleep) {
-    return [sleep['Nap'] ? 'Nap' : 'Night', '', sleep['Start Time'], sleep['End Time']];
+    return [sleep['Nap'] ? 'Nap' : 'Night', '', sleep['Notes'], sleep['Start Time'], sleep['End Time']];
 }).splice(0,50);
 
-data.unshift(['Type', 'Name', 'Start', 'End']);
+data.unshift(['Type', 'Name', {label:'Note', role:'tooltip'}, 'Start', 'End']);
 
 document.createElement('google-chart-loader').dataTable(data).then(function(dataTable) {
-        sleepChart.data = dataTable;
-      });
+    sleepChart.data = dataTable;
+});
 </script>
 
 <ul>
 {% for feed in site.data.feeds %}
-  <li>
-      {{ feed[" Start Time"] }}
+    <li>
+        {{ feed[" Start Time"] }}
         -
-      {{ feed[" End Time"] }}
-  </li>
+        {{ feed[" End Time"] }}
+    </li>
 {% endfor %}
 </ul>
