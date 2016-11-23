@@ -4,51 +4,43 @@ description: Charts and stuff
 ---
 
 <script src="{{ base_path }}vendor/moment/moment.js"></script>
-<script src="{{ base_path }}vendor/chart.js/Chart.js"></script>
 <script src="{{ base_path }}vendor/underscore/underscore.js"></script>
 <script src="{{ base_path }}js/data.js"></script>
+<link rel="import" href="{{ base_path }}vendor/google-chart/google-chart.html">
 
-<canvas id="myChart" width="400" height="400"></canvas>
+<style>
+code {
+    color: #007000;
+}
+google-chart {
+    height: 300px;
+    width: 800px;
+}
+</style>
+
+<google-chart id="sleepChart" type="timeline"></google-chart>
+
 <script type="text/javascript">
 var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
 
-var naps = sleeps.naps.splice(0,10);
-var dates = _.pluck(naps, "Mid Time");
-var values = _.map(naps, function (nap) {
-	return parseInt(nap["Approximate Duration (Minutes)"]);
-});
+var sleepChart = document.getElementById('sleepChart');
 
-var ctx = document.getElementById("myChart");
-var myChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-        labels: dates,
-        datasets: [{
-            label: 'Naps',
-            data: values,
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-        	xAxes:[{
-        		type: "time",
-        	}],
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
-        }
-    }
-});
+var data = _.map(sleeps.data, function (sleep) {
+    return [sleep['Nap'] ? 'Nap' : 'Night', '', sleep['Start Time'], sleep['End Time']];
+}).splice(0,50);
+
+data.unshift(['Type', 'Name', 'Start', 'End']);
+
+document.createElement('google-chart-loader').dataTable(data).then(function(dataTable) {
+        sleepChart.data = dataTable;
+      });
 </script>
 
 <ul>
 {% for feed in site.data.feeds %}
   <li>
       {{ feed[" Start Time"] }}
-		-
+        -
       {{ feed[" End Time"] }}
   </li>
 {% endfor %}
