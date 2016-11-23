@@ -4,7 +4,7 @@ class Data {
 			let cleansed = {};
 			_.each(datum, function (value, key) {
 				// Add dates and remove leading spaces from keys
-				cleansed[key.trim()] = /date|time/i.test(key) ? new Date(value) : value;
+				cleansed[key.trim()] = (value && /date|time/i.test(key)) ? new Date(value) : value;
 			});
 			return cleansed;
 		});
@@ -23,8 +23,12 @@ class Sleeps extends Data {
 		this.dayNightHour = dayNightHour || 8; // daytime 8 am - 8 pm
 		console.assert(this.dayNightHour < 12, 'dayNightHour must be between 0 and 11');
 		_.each(this.data, function (sleep) {
+			sleep["Approximate Duration (Minutes)"] = parseInt(sleep["Approximate Duration (Minutes)"]);
 			sleep["Start Time"] = sleep["Start Time"] && new Date(sleep["Start Time"]);
 			sleep["End Time"] = sleep["End Time"] && new Date(sleep["End Time"]);
+			if (sleep["Start Time"] && !sleep["End Time"] && sleep["Approximate Duration (Minutes)"] > 0) {
+				sleep["End Time"] = new Date(sleep["Start Time"].getTime() + sleep["Approximate Duration (Minutes)"] * 60 * 1000);
+			}
 
 			if (sleep["End Time"]) {
 				sleep["Mid Time"] = new Date((sleep["Start Time"].getTime() + sleep["End Time"].getTime()) / 2);
