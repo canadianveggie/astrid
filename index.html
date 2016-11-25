@@ -14,13 +14,18 @@ code {
 }
 google-chart {
     height: 300px;
-    width: 800px;
+    width: 1200px;
 }
 </style>
 
+<h2>Latest Sleeps</h2>
 <google-chart id="sleepTimeline" type="timeline"></google-chart>
 
-<google-chart id="sleepChart" type="timeline"></google-chart>
+<h2>Night Sleeps</h2>
+<google-chart id="sleepChart" type="stepped-area" options='{"isStacked": true}'></google-chart>
+
+<h2>Naps</h2>
+<google-chart id="napChart" type="stepped-area" options='{"isStacked": true}'></google-chart>
 
 
 <script type="text/javascript">
@@ -31,15 +36,57 @@ var sleepTimeline = document.getElementById('sleepTimeline');
 sleepTimeline.cols = [{label: 'Type', type: 'string'}, {label: 'Name', type: 'string'}, {label:'Note', type: 'string', role:'tooltip'}, {label: 'Start', type: 'date'}, {label: 'End', type: 'date'}];
 sleepTimeline.rows = _.map(sleeps.data, function (sleep) {
     return [sleep['Nap'] ? 'Nap' : 'Night', '', sleep['Notes'], sleep['Start Time'], sleep['End Time']];
-}).splice(0,50);
-</script>
+}).splice(-50);
 
-<ul>
-{% for feed in site.data.feeds %}
-    <li>
-        {{ feed[" Start Time"] }}
-        -
-        {{ feed[" End Time"] }}
-    </li>
-{% endfor %}
-</ul>
+
+var sleepChart = document.getElementById('sleepChart');
+sleepChart.cols = [{label: 'Day', type: 'string'},
+                    {label: 'Longest', type: 'number'},
+                    {label: '2nd Longest', type: 'number'},
+                    {label: 'Remainder', type: 'number'}];
+
+var napChart = document.getElementById('napChart');
+napChart.cols = [{label: 'Day', type: 'string'},
+                    {label: 'Longest', type: 'number'},
+                    {label: '2nd Longest', type: 'number'},
+                    {label: 'Remainder', type: 'number'}];
+
+var daytimeSleepDurations = [];
+var nightSleepDurations = [];
+
+// Returns duration of longest n sleeps plush remainder in an array
+// Result is always an array of n+1 elements
+function longestDurations (sleeps, n) {
+    let durations = _.pluck(sleeps, "Approximate Duration (Minutes)").sort(function(a, b) {
+        return b - a;
+    });
+    if (durations[0] < durations[1]) {
+        console.log(durations, sleeps);
+    }
+    let longest = durations.splice(0, n);
+    // Add remainder
+    longest.push(_.reduce(durations, function (s, n) {
+        return s+n;
+    }, 0));
+    // Ensure we have n + 1 results
+    while (longest.length < n + 1) {
+        longest.push(0);
+    }
+    return longest;
+}
+
+var sleepsByDay = sleeps.sleepsByDay;
+_.each(sleepsByDay, function (sleepDay, day) {
+    let napsAndSleeps = _.groupBy(sleepDay, 'Nap');
+    let napDurations = longestDurations(napsAndSleeps[true], 2);
+    napDurations.unshift(day);
+    let sleepDurations = longestDurations(napsAndSleeps[false], 2);
+    sleepDurations.unshift(day);
+    daytimeSleepDurations.push(napDurations);
+    nightSleepDurations.push(sleepDurations);
+});
+
+sleepChart.rows = nightSleepDurations;
+napChart.rows = daytimeSleepDurations;
+
+</script>

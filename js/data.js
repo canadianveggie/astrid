@@ -19,33 +19,35 @@ class Feeds extends Data {
 
 class Sleeps extends Data {
 	constructor (data, dayNightHour) {
-		super(data);
+		super(data.reverse());
 		this.dayNightHour = dayNightHour || 8; // daytime 8 am - 8 pm
 		console.assert(this.dayNightHour < 12, 'dayNightHour must be between 0 and 11');
 		_.each(this.data, function (sleep) {
 			sleep["Approximate Duration (Minutes)"] = parseInt(sleep["Approximate Duration (Minutes)"]);
 			sleep["Start Time"] = sleep["Start Time"] && new Date(sleep["Start Time"]);
 			sleep["End Time"] = sleep["End Time"] && new Date(sleep["End Time"]);
-			if (sleep["Start Time"] && !sleep["End Time"] && sleep["Approximate Duration (Minutes)"] > 0) {
+			if (sleep["Start Time"] && !sleep["End Time"]) {
 				sleep["End Time"] = new Date(sleep["Start Time"].getTime() + sleep["Approximate Duration (Minutes)"] * 60 * 1000);
 			}
 
-			if (sleep["End Time"]) {
-				sleep["Mid Time"] = new Date((sleep["Start Time"].getTime() + sleep["End Time"].getTime()) / 2);
-			} else {
-				sleep["Mid Time"] = sleep["Start Time"];
-			}
-
+			sleep["Mid Time"] = new Date((sleep["Start Time"].getTime() + sleep["End Time"].getTime()) / 2);
 			sleep["Nap"] = sleep["Mid Time"].getHours() >= this.dayNightHour && sleep["Mid Time"].getHours() < this.dayNightHour + 12;
+
+			var dayAdjustment = (sleep["Mid Time"].getHours() < this.dayNightHour) ? -1 : 0;
+			sleep["Day"] = new Date(sleep["Mid Time"].getFullYear(), sleep["Mid Time"].getMonth(), sleep["Mid Time"].getDate() + dayAdjustment);
 		}, this);
 	}
 
 	get naps() {
-		_.where(this.data, {"Nap": true});
+		return _.where(this.data, {"Nap": true}, this);
 	}
 
 	get nightSleeps() {
-		_.where(this.data, {"Nap": false});
+		return _.where(this.data, {"Nap": false}, this);
+	}
+
+	get sleepsByDay() {
+		return _.groupBy(this.data, "Day", this);
 	}
 }
 
