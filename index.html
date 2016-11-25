@@ -18,22 +18,20 @@ google-chart {
 }
 </style>
 
+<google-chart id="sleepTimeline" type="timeline"></google-chart>
+
 <google-chart id="sleepChart" type="timeline"></google-chart>
+
 
 <script type="text/javascript">
 var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
 
-var sleepChart = document.getElementById('sleepChart');
+var sleepTimeline = document.getElementById('sleepTimeline');
 
-var data = _.map(sleeps.data, function (sleep) {
+sleepTimeline.cols = [{label: 'Type', type: 'string'}, {label: 'Name', type: 'string'}, {label:'Note', type: 'string', role:'tooltip'}, {label: 'Start', type: 'date'}, {label: 'End', type: 'date'}];
+sleepTimeline.rows = _.map(sleeps.data, function (sleep) {
     return [sleep['Nap'] ? 'Nap' : 'Night', '', sleep['Notes'], sleep['Start Time'], sleep['End Time']];
 }).splice(0,50);
-
-data.unshift(['Type', 'Name', {label:'Note', role:'tooltip'}, 'Start', 'End']);
-
-document.createElement('google-chart-loader').dataTable(data).then(function(dataTable) {
-    sleepChart.data = dataTable;
-});
 </script>
 
 <ul>
