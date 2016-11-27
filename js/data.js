@@ -70,6 +70,37 @@ class Excretions extends Data {
 }
 
 class Feeds extends Data {
+	constructor (data) {
+		super(data, [
+			{id: 'id', label: 'id', orginalLabel: 'id', type: 'number'},
+			{id: 'start', label: 'Start Time', orginalLabel: ' Start Time', type: 'datetime'},
+			{id: 'end', label: 'End Time', derivativeFn: function (columnData, rawRow) {
+				let startTime = columnData[1].v;
+				let endTime = rawRow[' End Time'];
+				if (endTime) {
+					return new Date(endTime);
+				} else {
+					return new Date(startTime.getTime() + rawRow[" Duration (Minutes)"] * 60 * 1000);
+				}
+			}, type: 'datetime'},
+			{id: 'midTime', label: 'Mid Time', derivativeFn: function (columnData, rawRow) {
+				let startTime = columnData[1].v;
+				let endTime = columnData[2].v;
+				return new Date((startTime.getTime() + endTime.getTime()) / 2)
+			}, type: 'datetime'},
+			{id: 'feedType', label: 'Feed Type', orginalLabel: ' Feed Type', type: 'string'},
+			{id: 'Quantity', label: 'Quantity', orginalLabel: ' Quantity (oz)', type: 'number'},
+			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
+			{id: 'duration', label: 'Duration', orginalLabel: ' Duration (Minutes)', type: 'number'},
+			{id: 'foodType', label: 'Food Type', orginalLabel: ' Food Type', type: 'string'},
+			{id: 'unit', label: 'unit', orginalLabel: ' Unit', type: 'string'},
+			{id: 'bottleType', label: 'Bottle Type', orginalLabel: ' Bottle Type', type: 'string'},
+			{id: 'type', label: 'Type', derivativeFn: function (columnData, rawRow) {
+				let feedType = columnData[4].v;
+				return /Breast/i.test(feedType) ? 'Breast Feed' : feedType;
+			}, type: 'string'}
+		]);
+	}
 }
 
 class Sleeps extends Data {
