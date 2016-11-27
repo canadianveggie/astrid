@@ -5,88 +5,55 @@ description: Charts and stuff
 
 <script src="{{ base_path }}vendor/moment/moment.js"></script>
 <script src="{{ base_path }}vendor/underscore/underscore.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="{{ base_path }}js/data.js"></script>
-<link rel="import" href="{{ base_path }}vendor/google-chart/google-chart.html">
 
 <style>
 code {
     color: #007000;
 }
-google-chart {
+.google-chart {
     height: 300px;
     width: 1200px;
 }
 </style>
 
 <h2>Latest Sleeps</h2>
-<google-chart id="sleepTimeline" type="timeline"></google-chart>
+<div id="sleepTimeline" class="google-chart"></div>
 
 <h2>Night Sleeps</h2>
-<google-chart id="sleepChart" type="stepped-area" options='{"isStacked": true}'></google-chart>
-
-<h2>Naps</h2>
-<google-chart id="napChart" type="stepped-area" options='{"isStacked": true}'></google-chart>
-
+<div id="sleepChart" class="google-chart"></div>
 
 <script type="text/javascript">
-var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
-
-var sleepTimeline = document.getElementById('sleepTimeline');
-
-sleepTimeline.cols = [{label: 'Type', type: 'string'}, {label: 'Name', type: 'string'}, {label:'Note', type: 'string', role:'tooltip'}, {label: 'Start', type: 'date'}, {label: 'End', type: 'date'}];
-sleepTimeline.rows = _.map(sleeps.data, function (sleep) {
-    return [sleep['Nap'] ? 'Nap' : 'Night', '', sleep['Notes'], sleep['Start Time'], sleep['End Time']];
-}).splice(-50);
+google.charts.load('current', {packages: ['corechart', 'timeline']});
+google.charts.setOnLoadCallback(drawCharts);
 
 
-var sleepChart = document.getElementById('sleepChart');
-sleepChart.cols = [{label: 'Day', type: 'string'},
-                    {label: 'Longest', type: 'number'},
-                    {label: '2nd Longest', type: 'number'},
-                    {label: 'Remainder', type: 'number'}];
+function drawCharts() {
+    var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
 
-var napChart = document.getElementById('napChart');
-napChart.cols = [{label: 'Day', type: 'string'},
-                    {label: 'Longest', type: 'number'},
-                    {label: '2nd Longest', type: 'number'},
-                    {label: 'Remainder', type: 'number'}];
+    var sleepTimeline = new google.visualization.Timeline(document.getElementById('sleepTimeline'));
+    var sleepTimelineView = sleeps.dataView([
+        'type',
+        {sourceColumn: 'note', role: 'tooltip'},
+        'start',
+        'end'
+    ]);
 
-var daytimeSleepDurations = [];
-var nightSleepDurations = [];
+    // Filter to last 10 days
+    var timelineStart = new Date();
+    timelineStart.setDate(timelineStart.getDate() - 10); // 10 days ago
+    sleepTimelineView.setRows(sleepTimelineView.getFilteredRows([{column: 2, minValue: timelineStart}]));
+    sleepTimeline.draw(sleepTimelineView);
 
-// Returns duration of longest n sleeps plush remainder in an array
-// Result is always an array of n+1 elements
-function longestDurations (sleeps, n) {
-    let durations = _.pluck(sleeps, "Approximate Duration (Minutes)").sort(function(a, b) {
-        return b - a;
-    });
-    if (durations[0] < durations[1]) {
-        console.log(durations, sleeps);
-    }
-    let longest = durations.splice(0, n);
-    // Add remainder
-    longest.push(_.reduce(durations, function (s, n) {
-        return s+n;
-    }, 0));
-    // Ensure we have n + 1 results
-    while (longest.length < n + 1) {
-        longest.push(0);
-    }
-    return longest;
+    var sleepChart = new google.visualization.SteppedAreaChart(document.getElementById('sleepChart'));
+
+    var longestSleepsDataTable = sleeps.longestDurationsDataTable();
+    var longestNightSleepsDataView = new google.visualization.DataView(longestSleepsDataTable);
+    // Filter to night sleeps and hide the column
+    longestNightSleepsDataView.setRows(longestNightSleepsDataView.getFilteredRows([{column: 1, value: 'Night Sleep'}]));
+    longestNightSleepsDataView.hideColumns([1]);
+    sleepChart.draw(longestNightSleepsDataView, {isStacked: true});
 }
-
-var sleepsByDay = sleeps.sleepsByDay;
-_.each(sleepsByDay, function (sleepDay, day) {
-    let napsAndSleeps = _.groupBy(sleepDay, 'Nap');
-    let napDurations = longestDurations(napsAndSleeps[true], 2);
-    napDurations.unshift(day);
-    let sleepDurations = longestDurations(napsAndSleeps[false], 2);
-    sleepDurations.unshift(day);
-    daytimeSleepDurations.push(napDurations);
-    nightSleepDurations.push(sleepDurations);
-});
-
-sleepChart.rows = nightSleepDurations;
-napChart.rows = daytimeSleepDurations;
 
 </script>

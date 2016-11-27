@@ -16,19 +16,7 @@
     "tests"
   ],
   "dependencies": {
-    "google-chart": "^1.1.1",
     "underscore": "^1.8.3",
     "moment": "^2.16.0"
-  },
-  "exportsOverride": {
-    "google-chart": {
-      "": ["*.html", "*.css", "*.js"]
-    },
-    "iron-ajax": {
-      "": ["*.html", "*.css", "*.js"]
-    },
-    "promise-polyfill": {
-      "": ["*.html", "*.css", "*.js"]
-    }
   }
 }
