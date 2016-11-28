@@ -22,7 +22,14 @@ code {
 <div id="timeline" class="google-chart"></div>
 
 <h2>Night Sleeps</h2>
+<div id="daySleepChart" class="google-chart"></div>
+
+<h2>Day Naps</h2>
+<div id="napsChart" class="google-chart"></div>
+
+<h2>Total Sleep</h2>
 <div id="sleepChart" class="google-chart"></div>
+
 
 <script type="text/javascript">
 google.charts.load('current', {packages: ['corechart', 'timeline']});
@@ -41,14 +48,35 @@ function drawCharts() {
 	var timeline = new google.visualization.Timeline(document.getElementById('timeline'));
 	timeline.draw(timelineData.dataTable);
 
-	var sleepChart = new google.visualization.SteppedAreaChart(document.getElementById('sleepChart'));
+	var daySleepChart = new google.visualization.SteppedAreaChart(document.getElementById('daySleepChart'));
 
 	var longestSleepsDataTable = sleeps.longestDurationsDataTable();
 	var longestNightSleepsDataView = new google.visualization.DataView(longestSleepsDataTable);
 	// Filter to night sleeps and hide the column
 	longestNightSleepsDataView.setRows(longestNightSleepsDataView.getFilteredRows([{column: 1, value: 'Night Sleep'}]));
 	longestNightSleepsDataView.hideColumns([1]);
-	sleepChart.draw(longestNightSleepsDataView, {isStacked: true});
+	daySleepChart.draw(longestNightSleepsDataView, {isStacked: true});
+
+	var napsData = sleeps.dataView(['day', 'type', 'duration']);
+	napsData.setRows(napsData.getFilteredRows([{column: 1, value: 'Day Nap'}]));
+	napsData = google.visualization.data.group(napsData.toDataTable(), [0], [
+		{column: 2, label: 'Duration', aggregation: google.visualization.data.sum, type: 'number'},
+		{column: 2, label: 'Count', aggregation: google.visualization.data.count, type: 'number'}
+	]);
+
+	var napsChart = new google.visualization.ComboChart(document.getElementById('napsChart'));
+	napsChart.draw(napsData, {
+		seriesType: 'bars',
+		series: {1: {type: 'line', targetAxisIndex: 1}}
+    });
+
+	var sleepData = sleeps.dataView(['day', 'duration']);
+	sleepData = google.visualization.data.group(sleepData.toDataTable(), [0], [
+		{column: 1, label: 'Duration', aggregation: google.visualization.data.sum, type: 'number'}
+	]);
+
+	var sleepChart = new google.visualization.ColumnChart(document.getElementById('sleepChart'));
+	sleepChart.draw(sleepData);
 }
 
 </script>
