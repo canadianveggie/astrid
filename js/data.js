@@ -199,8 +199,35 @@ class Sleeps extends Data {
 	get sleepsByDay() {
 		return _.groupBy(this.data, "day", this);
 	}
-
-
-
 }
 
+class TimelineData {
+	constructor (datas, startDate, endDate) {
+		var timelineViews = _.map(datas, function (data) {
+			let timelineView = data.dataView([
+				'type',
+				{sourceColumn: 'note', role: 'tooltip'},
+				'start',
+				'end'
+			]);
+
+			if (startDate) {
+				timelineView.setRows(timelineView.getFilteredRows([{column: 2, minValue: startDate}]));
+			}
+			if (endDate) {
+				timelineView.setRows(timelineView.getFilteredRows([{column: 2, maxValue: endDate}]));
+			}
+			return timelineView;
+		});
+
+		var combinedJson = _.reduce(timelineViews, function (combined, timelineView) {
+			var jsonObject = JSON.parse(timelineView.toDataTable().toJSON());
+			if (combined.rows) {
+				jsonObject.rows = combined.rows.concat(jsonObject.rows);
+			}
+			return jsonObject;
+		}, {});
+
+		this.dataTable = new google.visualization.DataTable(combinedJson);
+	}
+}
