@@ -67,6 +67,28 @@ class Data {
 }
 
 class Excretions extends Data {
+
+	constructor (data) {
+		const diaperChangeDuration = 3 * 60 * 1000; // 3 minutes
+		// id, Time, Type, Notes
+		super(data, [
+			{id: 'id', label: 'id', orginalLabel: 'id', type: 'number'},
+			{id: 'time', label: 'Time', orginalLabel: ' Time', type: 'datetime'},
+			{id: 'start', label: 'Start Time', derivativeFn: function (columnData, rawRow) {
+				let time = columnData[1].v;
+				return new Date(time.getTime() - diaperChangeDuration);
+			}, type: 'datetime'},
+			{id: 'end', label: 'End Time', derivativeFn: function (columnData, rawRow) {
+				let time = columnData[1].v;
+				return time;
+			}, type: 'datetime'},
+			{id: 'diaperChangeType', label: 'Diaper Change Type', orginalLabel: ' Type', type: 'string'},
+			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
+			{id: 'type', label: 'Type', derivativeFn: function (columnData, rawRow) {
+				return 'Diaper Change';
+			}, type: 'string'}
+		]);
+	}
 }
 
 class Feeds extends Data {
@@ -83,7 +105,7 @@ class Feeds extends Data {
 					return new Date(startTime.getTime() + rawRow[" Duration (Minutes)"] * 60 * 1000);
 				}
 			}, type: 'datetime'},
-			{id: 'midTime', label: 'Mid Time', derivativeFn: function (columnData, rawRow) {
+			{id: 'time', label: 'Time', derivativeFn: function (columnData, rawRow) {
 				let startTime = columnData[1].v;
 				let endTime = columnData[2].v;
 				return new Date((startTime.getTime() + endTime.getTime()) / 2)
@@ -119,7 +141,7 @@ class Sleeps extends Data {
 					return new Date(startTime.getTime() + rawRow[" Approximate Duration (Minutes)"] * 60 * 1000);
 				}
 			}, type: 'datetime'},
-			{id: 'midTime', label: 'Mid Time', derivativeFn: function (columnData, rawRow) {
+			{id: 'time', label: 'Time', derivativeFn: function (columnData, rawRow) {
 				let startTime = columnData[1].v;
 				let endTime = columnData[2].v;
 				return new Date((startTime.getTime() + endTime.getTime()) / 2)
@@ -127,13 +149,13 @@ class Sleeps extends Data {
 			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
 			{id: 'duration', label: 'Duration', orginalLabel: ' Approximate Duration (Minutes)', type: 'number'},
 			{id: 'type', label: 'Type', derivativeFn: function (columnData, rawRow) {
-				let midTime = columnData[3].v;
-				return midTime.getHours() >= dayNightHour && midTime.getHours() < dayNightHour + 12 ? 'Day Nap' : 'Night Sleep';
+				let time = columnData[3].v;
+				return time.getHours() >= dayNightHour && time.getHours() < dayNightHour + 12 ? 'Day Nap' : 'Night Sleep';
 			}, type: 'string'},
 			{id: 'day', label: 'Day', derivativeFn: function (columnData, rawRow) {
-				let midTime = columnData[3].v;
-				let dayAdjustment = (midTime.getHours() < dayNightHour) ? -1 : 0;
-				return new Date(midTime.getFullYear(), midTime.getMonth(), midTime.getDate() + dayAdjustment);
+				let time = columnData[3].v;
+				let dayAdjustment = (time.getHours() < dayNightHour) ? -1 : 0;
+				return new Date(time.getFullYear(), time.getMonth(), time.getDate() + dayAdjustment);
 			}, type: 'datetime'},
 		]);
 
