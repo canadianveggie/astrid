@@ -82,11 +82,8 @@ class Excretions extends Data {
 				let time = columnData[1].v;
 				return time;
 			}, type: 'datetime'},
-			{id: 'diaperChangeType', label: 'Diaper Change Type', orginalLabel: ' Type', type: 'string'},
-			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
-			{id: 'type', label: 'Type', derivativeFn: function (columnData, rawRow) {
-				return 'Diaper Change';
-			}, type: 'string'}
+			{id: 'type', label: 'Type', orginalLabel: ' Type', type: 'string'},
+			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'}
 		]);
 	}
 }
@@ -110,17 +107,13 @@ class Feeds extends Data {
 				let endTime = columnData[2].v;
 				return new Date((startTime.getTime() + endTime.getTime()) / 2)
 			}, type: 'datetime'},
-			{id: 'feedType', label: 'Feed Type', orginalLabel: ' Feed Type', type: 'string'},
+			{id: 'type', label: 'Feed Type', orginalLabel: ' Feed Type', type: 'string'},
 			{id: 'Quantity', label: 'Quantity', orginalLabel: ' Quantity (oz)', type: 'number'},
 			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
 			{id: 'duration', label: 'Duration', orginalLabel: ' Duration (Minutes)', type: 'number'},
-			{id: 'foodType', label: 'Food Type', orginalLabel: ' Food Type', type: 'string'},
+			{id: 'type', label: 'Food Type', orginalLabel: ' Food Type', type: 'string'},
 			{id: 'unit', label: 'unit', orginalLabel: ' Unit', type: 'string'},
-			{id: 'bottleType', label: 'Bottle Type', orginalLabel: ' Bottle Type', type: 'string'},
-			{id: 'type', label: 'Type', derivativeFn: function (columnData, rawRow) {
-				let feedType = columnData[4].v;
-				return /Breast/i.test(feedType) ? 'Breast Feed' : feedType;
-			}, type: 'string'}
+			{id: 'bottleType', label: 'Bottle Type', orginalLabel: ' Bottle Type', type: 'string'}
 		]);
 	}
 }
@@ -151,7 +144,7 @@ class Sleeps extends Data {
 			{id: 'duration', label: 'Duration', orginalLabel: ' Approximate Duration (Minutes)', type: 'number'},
 			{id: 'type', label: 'Type', derivativeFn: function (columnData, rawRow) {
 				let time = columnData[3].v;
-				return time.getHours() >= dayNightStartHour|| time.getHours() < dayNightEndHour ? 'Night Sleep' : 'Day Nap';
+				return time.getHours() >= dayNightStartHour|| time.getHours() < dayNightEndHour ? 'Night' : 'Nap';
 			}, type: 'string'},
 			{id: 'day', label: 'Day', derivativeFn: function (columnData, rawRow) {
 				let time = columnData[3].v;
@@ -192,8 +185,8 @@ class Sleeps extends Data {
 
 		_.each(this.sleepsByDay, function (sleepDay, day) {
 			let napsAndSleeps = _.groupBy(sleepDay, 'type');
-			_.each(['Day Nap', 'Night Sleep'], function (type) {
-				let sleepDurations = longestDurations(napsAndSleeps[type], 2);
+			_.each(napsAndSleeps, function (halfDaySleep, type) {
+				let sleepDurations = longestDurations(halfDaySleep, 2);
 				sleepDurations.unshift(type);
 				sleepDurations.unshift(new Date(day));
 				dataTable.addRow(sleepDurations);
@@ -205,14 +198,14 @@ class Sleeps extends Data {
 
 	naps() {
 		var view = super.dataView();
-		view.setRows(view.getFilteredRows([{column: super.columnIdToIndex('type'), value: 'Day Nap'}]));
+		view.setRows(view.getFilteredRows([{column: super.columnIdToIndex('type'), value: 'Nap'}]));
 
 		return view;
 	}
 
 	nightSleeps() {
 		var view = super.dataView();
-		view.setRows(view.getFilteredRows([{column: super.columnIdToIndex('type'), value: 'Night Sleep'}]));
+		view.setRows(view.getFilteredRows([{column: super.columnIdToIndex('type'), value: 'Night'}]));
 
 		return view;
 	}
@@ -224,8 +217,9 @@ class Sleeps extends Data {
 
 class TimelineData {
 	constructor (datas, startDate, endDate) {
-		var timelineViews = _.map(datas, function (data) {
+		var timelineViews = _.map(datas, function (data, category) {
 			let timelineView = data.dataView([
+				{id: 'category', label: 'Category', type: 'string', calc: function () { return category; }},
 				'type',
 				{sourceColumn: 'note', role: 'tooltip'},
 				'start',
@@ -233,10 +227,10 @@ class TimelineData {
 			]);
 
 			if (startDate) {
-				timelineView.setRows(timelineView.getFilteredRows([{column: 2, minValue: startDate}]));
+				timelineView.setRows(timelineView.getFilteredRows([{column: 3, minValue: startDate}]));
 			}
 			if (endDate) {
-				timelineView.setRows(timelineView.getFilteredRows([{column: 2, maxValue: endDate}]));
+				timelineView.setRows(timelineView.getFilteredRows([{column: 3, maxValue: endDate}]));
 			}
 			return timelineView;
 		});
