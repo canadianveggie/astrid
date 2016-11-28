@@ -40,10 +40,11 @@ function drawCharts() {
 	var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
 	var feeds = new Feeds({{ site.data.feeds | jsonify }});
 	var excretions = new Excretions({{ site.data.excretions | jsonify }});
+	var journals = new Journals({{ site.data.journal_entries | jsonify }});
 
 	var timelineStart = new Date();
 	timelineStart.setDate(timelineStart.getDate() - 10); // 10 days ago
-	var timelineData = new TimelineData({Sleep: sleeps, Feeds:feeds, Diapers:excretions}, timelineStart);
+	var timelineData = new TimelineData({Sleep: sleeps, Feeds:feeds, Diapers:excretions, Journal:journals}, timelineStart);
 
 	var timeline = new google.visualization.Timeline(document.getElementById('timeline'));
 	timeline.draw(timelineData.dataTable, {timeline: {showBarLabels:false}});

@@ -150,7 +150,7 @@ class Sleeps extends Data {
 				let time = columnData[3].v;
 				let dayAdjustment = (time.getHours() < dayNightEndHour) ? -1 : 0;
 				return new Date(time.getFullYear(), time.getMonth(), time.getDate() + dayAdjustment);
-			}, type: 'datetime'},
+			}, type: 'datetime'}
 		]);
 	}
 
@@ -214,6 +214,21 @@ class Sleeps extends Data {
 		return _.groupBy(this.data, "day", this);
 	}
 }
+
+class Journals extends Data {
+	constructor (data) {
+		super(data, [
+			{id: 'id', label: 'id', orginalLabel: 'id', type: 'number'},
+			{id: 'start', label: 'Start Time', orginalLabel: ' Start Time', type: 'datetime'},
+			{id: 'end', label: 'End Time', orginalLabel: ' End Time', type: 'datetime'},
+			{id: 'category', label: 'Category', orginalLabel: ' Category', type: 'string'},
+			{id: 'type', label: 'Type', orginalLabel: ' Sub Category', type: 'string'},
+			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
+			{id: 'timed', label: 'Timed', orginalLabel: ' Uses Timer', type: 'boolean'}
+		]);
+	}
+}
+
 
 class TimelineData {
 	constructor (datas, startDate, endDate) {
