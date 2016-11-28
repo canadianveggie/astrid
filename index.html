@@ -10,11 +10,11 @@ description: Charts and stuff
 
 <style>
 code {
-    color: #007000;
+	color: #007000;
 }
 .google-chart {
-    height: 300px;
-    width: 1200px;
+	height: 300px;
+	width: 1200px;
 }
 </style>
 
@@ -30,42 +30,42 @@ google.charts.setOnLoadCallback(drawCharts);
 
 
 function drawCharts() {
-    var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
-    var feeds = new Feeds({{ site.data.feeds | jsonify }});
+	var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
+	var feeds = new Feeds({{ site.data.feeds | jsonify }});
 
-    var sleepTimelineView = sleeps.dataView([
-        'type',
-        {sourceColumn: 'note', role: 'tooltip'},
-        'start',
-        'end'
-    ]);
+	var sleepTimelineView = sleeps.dataView([
+		'type',
+		{sourceColumn: 'note', role: 'tooltip'},
+		'start',
+		'end'
+	]);
 
-    var feedsTimelineView = feeds.dataView([
-        'type',
-        {sourceColumn: 'note', role: 'tooltip'},
-        'start',
-        'end'
-    ]);
+	var feedsTimelineView = feeds.dataView([
+		'type',
+		{sourceColumn: 'note', role: 'tooltip'},
+		'start',
+		'end'
+	]);
 
-    var combinedTimelineData = JSON.parse(sleepTimelineView.toDataTable().toJSON());
-    combinedTimelineData.rows = combinedTimelineData.rows.concat(JSON.parse(feedsTimelineView.toDataTable().toJSON()).rows);
+	var combinedTimelineData = JSON.parse(sleepTimelineView.toDataTable().toJSON());
+	combinedTimelineData.rows = combinedTimelineData.rows.concat(JSON.parse(feedsTimelineView.toDataTable().toJSON()).rows);
 
-    var timeline = new google.visualization.Timeline(document.getElementById('timeline'));
-    var timelineDataView = new google.visualization.DataView(new google.visualization.DataTable(combinedTimelineData));
-    // Filter to last 10 days
-    var timelineStart = new Date();
-    timelineStart.setDate(timelineStart.getDate() - 10); // 10 days ago
-    timelineDataView.setRows(timelineDataView.getFilteredRows([{column: 2, minValue: timelineStart}]));
-    timeline.draw(timelineDataView);
+	var timeline = new google.visualization.Timeline(document.getElementById('timeline'));
+	var timelineDataView = new google.visualization.DataView(new google.visualization.DataTable(combinedTimelineData));
+	// Filter to last 10 days
+	var timelineStart = new Date();
+	timelineStart.setDate(timelineStart.getDate() - 10); // 10 days ago
+	timelineDataView.setRows(timelineDataView.getFilteredRows([{column: 2, minValue: timelineStart}]));
+	timeline.draw(timelineDataView);
 
-    var sleepChart = new google.visualization.SteppedAreaChart(document.getElementById('sleepChart'));
+	var sleepChart = new google.visualization.SteppedAreaChart(document.getElementById('sleepChart'));
 
-    var longestSleepsDataTable = sleeps.longestDurationsDataTable();
-    var longestNightSleepsDataView = new google.visualization.DataView(longestSleepsDataTable);
-    // Filter to night sleeps and hide the column
-    longestNightSleepsDataView.setRows(longestNightSleepsDataView.getFilteredRows([{column: 1, value: 'Night Sleep'}]));
-    longestNightSleepsDataView.hideColumns([1]);
-    sleepChart.draw(longestNightSleepsDataView, {isStacked: true});
+	var longestSleepsDataTable = sleeps.longestDurationsDataTable();
+	var longestNightSleepsDataView = new google.visualization.DataView(longestSleepsDataTable);
+	// Filter to night sleeps and hide the column
+	longestNightSleepsDataView.setRows(longestNightSleepsDataView.getFilteredRows([{column: 1, value: 'Night Sleep'}]));
+	longestNightSleepsDataView.hideColumns([1]);
+	sleepChart.draw(longestNightSleepsDataView, {isStacked: true});
 }
 
 </script>
