@@ -236,7 +236,17 @@ class TimelineData {
 			let timelineView = data.dataView([
 				{id: 'category', label: 'Category', type: 'string', calc: function () { return category; }},
 				'type',
-				{sourceColumn: 'note', role: 'tooltip'},
+				{id: 'tooltip', label: 'Tooltip', type: 'string', role: 'tooltip', p: {html:true}, calc: function (datatable, row) {
+					let type = datatable.getValue(row, data.columnIdToIndex('type'));
+					let start = datatable.getValue(row, data.columnIdToIndex('start'));
+					let end = datatable.getValue(row, data.columnIdToIndex('end'));
+					let note = datatable.getValue(row, data.columnIdToIndex('note'));
+					var tooltip = '<strong>Type</strong>: ' + type + '<br>' + start + ' - ' + end;
+					if (note) {
+						tooltip += '<br><strong>Note</strong>: ' + note;
+					}
+					return tooltip;
+				}},
 				'start',
 				'end'
 			]);
