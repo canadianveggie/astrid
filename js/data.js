@@ -126,9 +126,10 @@ class Feeds extends Data {
 }
 
 class Sleeps extends Data {
-	constructor (data, dayNightHour) {
-		dayNightHour = dayNightHour || 8;
-		console.assert(dayNightHour < 12, 'dayNightHour must be between 0 and 11');
+	constructor (data, dayNightStartHour, dayNightEndHour) {
+		// Nighttime - 6pm to 7 am
+		dayNightStartHour = dayNightStartHour || 18;
+		dayNightEndHour = dayNightEndHour || 6;
 		super(data, [
 			{id: 'id', label: 'id', orginalLabel: 'id', type: 'number'},
 			{id: 'start', label: 'Start Time', orginalLabel: ' Start Time', type: 'datetime'},
@@ -150,16 +151,14 @@ class Sleeps extends Data {
 			{id: 'duration', label: 'Duration', orginalLabel: ' Approximate Duration (Minutes)', type: 'number'},
 			{id: 'type', label: 'Type', derivativeFn: function (columnData, rawRow) {
 				let time = columnData[3].v;
-				return time.getHours() >= dayNightHour && time.getHours() < dayNightHour + 12 ? 'Day Nap' : 'Night Sleep';
+				return time.getHours() >= dayNightStartHour|| time.getHours() < dayNightEndHour ? 'Night Sleep' : 'Day Nap';
 			}, type: 'string'},
 			{id: 'day', label: 'Day', derivativeFn: function (columnData, rawRow) {
 				let time = columnData[3].v;
-				let dayAdjustment = (time.getHours() < dayNightHour) ? -1 : 0;
+				let dayAdjustment = (time.getHours() < dayNightEndHour) ? -1 : 0;
 				return new Date(time.getFullYear(), time.getMonth(), time.getDate() + dayAdjustment);
 			}, type: 'datetime'},
 		]);
-
-		this.dayNightHour = dayNightHour;
 	}
 
 	longestDurationsDataTable() {
