@@ -20,6 +20,9 @@ description: Charts and stuff
 <h2>Total Sleep</h2>
 <div id="sleepChart" class="google-chart"></div>
 
+<h2>Growth</h2>
+<div id="growthChart" class="google-chart"></div>
+
 
 <script type="text/javascript">
 google.charts.load('current', {packages: ['corechart', 'timeline']});
@@ -31,6 +34,7 @@ function drawCharts() {
 	var feeds = new Feeds({{ site.data.feeds | jsonify }});
 	var excretions = new Excretions({{ site.data.excretions | jsonify }});
 	var journals = new Journals({{ site.data.journal_entries | jsonify }});
+	var growths = new Growths({{ site.data.growths | jsonify }});
 
 	var timelineStart = new Date();
 	timelineStart.setDate(timelineStart.getDate() - 10); // 10 days ago
@@ -68,6 +72,22 @@ function drawCharts() {
 
 	var sleepChart = new google.visualization.ColumnChart(document.getElementById('sleepChart'));
 	sleepChart.draw(sleepData);
+
+	var growthChart = new google.visualization.LineChart(document.getElementById('growthChart'));
+	var growthsDataView = growths.dataView(['day', 'weight', 'height', 'head']);
+	var growthChartOptions = {
+		curveType: 'function',
+		interpolateNulls: true,
+		series: {
+			1: { targetAxisIndex:1 },
+			2: { targetAxisIndex:1 }
+		},
+		vAxes: {
+			0: { title: growths.weightUnit()},
+			1: { title: growths.lengthUnit()}
+		}
+	};
+	growthChart.draw(growthsDataView, growthChartOptions);
 }
 
 </script>

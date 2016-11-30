@@ -19,6 +19,10 @@ class Data {
 							value = value > 0;
 						} else if (column.type === 'number') {
 							value = parseFloat(value);
+							// FeedBaby exports null numeric data as 0, replace with null
+							if (!value) {
+								value = null;
+							}
 						} else if (column.type === 'date' || column.type === 'datetime') {
 							value = new Date(value);
 						}
@@ -115,6 +119,30 @@ class Feeds extends Data {
 			{id: 'unit', label: 'unit', orginalLabel: ' Unit', type: 'string'},
 			{id: 'bottleType', label: 'Bottle Type', orginalLabel: ' Bottle Type', type: 'string'}
 		]);
+	}
+}
+
+class Growths extends Data {
+	constructor (data) {
+		// id, Day, Weight, Weight Unit, Height, Head, Length Unit, Notes
+		super(data, [
+			{id: 'id', label: 'id', orginalLabel: 'id', type: 'number'},
+			{id: 'day', label: 'Day', orginalLabel: ' Day', type: 'date'},
+			{id: 'weight', label: 'Weight', orginalLabel: ' Weight', type: 'number'},
+			{id: 'weightUnit', label: 'Weight Unit', orginalLabel: ' Weight Unit', type: 'string'},
+			{id: 'height', label: 'Height', orginalLabel: ' Height', type: 'number'},
+			{id: 'head', label: 'Head', orginalLabel: ' Head', type: 'number'},
+			{id: 'lengthUnit', label: 'Length Unit', orginalLabel: ' Length Unit', type: 'string'},
+			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'}
+		]);
+	}
+
+	weightUnit () {
+		return this.data.length && this.data[0].weightUnit;
+	}
+
+	lengthUnit () {
+		return this.data.length && this.data[0].lengthUnit;
 	}
 }
 
