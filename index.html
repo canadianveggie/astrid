@@ -9,21 +9,33 @@ description: Charts and stuff
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="{{ base_path }}js/data.js"></script>
 
-<h2>Recent Events</h2>
-<div id="timeline" class="google-chart"></div>
 
-<h2>Night Sleeps</h2>
-<div id="daySleepChart" class="google-chart"></div>
+<div class="container-fluid">
+	<div class="row">
+		<h2>Recent Events</h2>
+		<div id="timeline" class="google-chart"></div>
+	</div>
 
-<h2>Day Naps</h2>
-<div id="napsChart" class="google-chart"></div>
+	<div class="row">
+		<h2>Night Sleeps</h2>
+		<div id="daySleepChart" class="google-chart"></div>
+	</div>
 
-<h2>Total Sleep</h2>
-<div id="sleepChart" class="google-chart"></div>
+	<div class="row">
+		<h2>Day Naps</h2>
+		<div id="napsChart" class="google-chart"></div>
+	</div>
 
-<h2>Growth</h2>
-<div id="growthChart" class="google-chart"></div>
+	<div class="row">
+		<h2>Total Sleep</h2>
+		<div id="sleepChart" class="google-chart"></div>
+	</div>
 
+	<div class="row">
+		<h2>Growth</h2>
+		<div id="growthChart" class="google-chart"></div>
+	</div>
+</div>
 
 <script type="text/javascript">
 google.charts.load('current', {packages: ['corechart', 'timeline']});
