@@ -11,6 +11,40 @@ description: Charts and stuff
 
 
 <div class="container-fluid">
+	<div class="row metadata">
+		<div class="col-xs-12 col-sm-1"><img src="{{ site.data.baby.picture_url }}"></div>
+		<div class="col-xs-12 col-sm-11">
+			<div class="row">
+				<div class="col-md-12">{{ site.data.baby.name }}</div>
+				<div class="col-md-12">{{ site.data.baby.birthdate }}</div>
+				<div class="col-md-12">{{ site.data.baby.gender }}</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row kpis">
+		<div class="col-xs-6 col-sm-3 kpi">
+			<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="">
+			<h4><span id="sleepHoursKPI"></span> Hours</h4>
+			<span class="text-muted">in peaceful sleep</span>
+		</div>
+		<div class="col-xs-6 col-sm-3 kpi">
+			<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="">
+			<h4><span id="feedingsKPI"></span> Feedings</h4>
+			<span class="text-muted">ingesting sustenance</span>
+		</div>
+		<div class="col-xs-6 col-sm-3 kpi">
+			<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="">
+			<h4><span id="diapersKPI"></span> Diapers</h4>
+			<span class="text-muted">dutifully changed</span>
+		</div>
+		<div class="col-xs-6 col-sm-3 kpi">
+			<img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" width="200" height="200" class="img-responsive" alt="">
+			<h4><span id="bathsKPI"></span> Baths</h4>
+			<span class="text-muted">getting squeaky clean</span>
+		</div>
+	</div>
+
 	<div class="row">
 		<h2>Recent Events</h2>
 		<div id="timeline" class="google-chart"></div>
@@ -41,14 +75,18 @@ description: Charts and stuff
 google.charts.load('current', {packages: ['corechart', 'timeline']});
 google.charts.setOnLoadCallback(drawCharts);
 
+var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
+var feeds = new Feeds({{ site.data.feeds | jsonify }});
+var excretions = new Excretions({{ site.data.excretions | jsonify }});
+var journals = new Journals({{ site.data.journal_entries | jsonify }});
+var growths = new Growths({{ site.data.growths | jsonify }});
+
+$("#sleepHoursKPI").html(Math.round(sleeps.totalHours));
+$("#feedingsKPI").html(feeds.data.length);
+$("#diapersKPI").html(excretions.data.length);
+$("#bathsKPI").html(_.where(journals.data, {type: "Bath"}).length);
 
 function drawCharts() {
-	var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
-	var feeds = new Feeds({{ site.data.feeds | jsonify }});
-	var excretions = new Excretions({{ site.data.excretions | jsonify }});
-	var journals = new Journals({{ site.data.journal_entries | jsonify }});
-	var growths = new Growths({{ site.data.growths | jsonify }});
-
 	var timelineStart = new Date();
 	timelineStart.setDate(timelineStart.getDate() - 10); // 10 days ago
 	var timelineData = new TimelineData({Sleep: sleeps, Feeds:feeds, Diapers:excretions, Journal:journals}, timelineStart);

@@ -238,6 +238,12 @@ class Sleeps extends Data {
 		return view;
 	}
 
+	get totalHours() {
+		return _.reduce(this.data, function (hours, sleep) {
+			return hours + sleep.duration / 60;
+		}, 0);
+	}
+
 	get sleepsByDay() {
 		return _.groupBy(this.data, "day", this);
 	}
@@ -254,6 +260,10 @@ class Journals extends Data {
 			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
 			{id: 'timed', label: 'Timed', orginalLabel: ' Uses Timer', type: 'boolean'}
 		]);
+	}
+
+	fiterBySubCategory (subCategory) {
+		return _.where(this.data, {})
 	}
 }
 

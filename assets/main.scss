@@ -40,6 +40,34 @@ $on-laptop:        1200px;
 	width: 100%;
 }
 
+.metadata {
+	margin-bottom: 30px;
+}
+
+.metadata img {
+	height: 50px;
+	width: 50px;
+    border-radius: 50%;
+}
+
+.kpis {
+	margin-bottom: 30px;
+	text-align: center;
+}
+
+.kpi h4 {
+	margin-bottom: 0;
+}
+
+.kpi {
+	margin-bottom: 20px;
+}
+
+.kpi img {
+    display: inline-block;
+    border-radius: 50%;
+}
+
 // Import partials from the `minima` theme.
 @import "minima";
 @import "bootstrap";
