@@ -26,7 +26,7 @@ github_url: https://github.com/canadianveggie/astrid
 sass:
   load_paths:
     - _sass
-    - bower_components/bootstrap-sass/assets/stylesheets
+    - vendor/bootstrap-sass/assets/stylesheets
 
 
 # Build settings
