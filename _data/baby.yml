@@ -1,4 +1,4 @@
-name:
-gender:  # male or female
-birthdate: # format YYYY-MM-DD
-picture_url:
+name: Astrid
+gender: female # male or female
+birthdate: 2016-06-29 # format YYYY-MM-DD
+picture_url: https://c2.staticflickr.com/6/5738/31281481066_f274c816b2_s.jpg
