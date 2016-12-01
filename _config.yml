@@ -22,10 +22,10 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: cdnveg
 github_username:  canadianveggie
 github_url: https://github.com/canadianveggie/astrid
+google_analytics: UA-88136017-1
 
 sass:
   sass_dir: vendor/css/bootstrap-sass
-
 
 # Build settings
 markdown: kramdown
