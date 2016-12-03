@@ -10,17 +10,8 @@
 	padding-right: 40px;
 }
 
-.metadata {
-	margin-bottom: 30px;
-}
-
-.metadata img {
-	height: 50px;
-	width: 50px;
-    border-radius: 50%;
-}
-
 .kpis {
+	margin-top: 30px;
 	margin-bottom: 30px;
 	text-align: center;
 }
@@ -34,9 +25,12 @@
 }
 
 .kpi img {
-    display: inline-block;
-    height: 200px;
-    width: 200px;
+	display: inline-block;
+	max-height: 150px;
+}
+
+.kpi img.circle {
+	border-radius: 50%;
 }
 
 @import "bootstrap";

@@ -144,6 +144,18 @@ class Growths extends Data {
 	lengthUnit () {
 		return this.data.length && this.data[0].lengthUnit;
 	}
+
+	get weightChange () {
+		if (!this.data.length) {
+			return 0;
+		}
+		var sortedByDate = _.chain(this.data).filter(function (growth) {
+			return growth.weight > 0;
+		}).sortBy("day").value();
+		var latestWeight = sortedByDate[sortedByDate.length - 1].weight;
+		var earliestWeight = sortedByDate[0].weight;
+		return latestWeight / earliestWeight;
+	}
 }
 
 class Sleeps extends Data {
@@ -307,5 +319,31 @@ class TimelineData {
 		}, {});
 
 		this.dataTable = new google.visualization.DataTable(combinedJson);
+	}
+}
+
+class Metadata {
+	constructor (data) {
+		this.data = data;
+	}
+
+	get birthdate () {
+		if (!this.data.birthdate) {
+			return new Date();
+		}
+		return new Date(this.data.birthdate);
+	}
+
+	get ageInDays () {
+		return (new Date() - this.birthdate) / 24/60/60/1000;
+	}
+
+	get ageLabel () {
+		var ageInDays = this.ageInDays;
+		if (ageInDays < 35) {
+			return Math.ceil(ageInDays) + " Days";
+		} else {
+		 	return (ageInDays / 7).toFixed(1) + " Weeks";
+		}
 	}
 }

@@ -12,37 +12,52 @@ description: Charts and stuff
 
 
 <div class="container-fluid">
-	<div class="row metadata">
-		<div class="col-xs-12 col-sm-1"><img src="{{ site.data.baby.picture_url }}"></div>
-		<div class="col-xs-12 col-sm-11">
-			<div class="row">
-				<div class="col-md-12">{{ site.data.baby.name }}</div>
-				<div class="col-md-12">{{ site.data.baby.birthdate }}</div>
-				<div class="col-md-12">{{ site.data.baby.gender }}</div>
-			</div>
-		</div>
-	</div>
-
 	<div class="row kpis">
-		<div class="col-xs-6 col-sm-3 kpi">
+		<div class="col-xs-6 col-sm-4 col-md-2 kpi">
+			{% if site.data.baby.picture_url %}
+			<img src="{{ site.data.baby.picture_url }}" class="img-responsive circle" alt="Baby">
+			{% elsif site.data.baby.gender == 'female' %}
+			<img src="{{ base_path }}assets/images/baby-1.png" class="img-responsive" alt="Baby">
+			{% else %}
+			<img src="{{ base_path }}assets/images/baby.png" class="img-responsive" alt="Baby">
+			{% endif %}
+			<h4><span id="ageKPI"></span></h4>
+			<span class="text-muted">exploring this world</span>
+		</div>
+		<div class="col-xs-6 col-sm-4 col-md-2 kpi">
 			<img src="{{ base_path }}assets/images/crib-toy.png" class="img-responsive" alt="Sleep">
 			<h4><span id="sleepHoursKPI"></span> Hours</h4>
 			<span class="text-muted">in peaceful sleep</span>
 		</div>
-		<div class="col-xs-6 col-sm-3 kpi">
-			<img src="{{ base_path }}assets/images/feeding-bottle-1.png" alt="Feeding">
+		<div class="col-xs-6 col-sm-4 col-md-2 kpi">
+			<img src="{{ base_path }}assets/images/feeding-bottle-1.png" class="img-responsive" alt="Feeding">
 			<h4><span id="feedingsKPI"></span> Feedings</h4>
 			<span class="text-muted">ingesting sustenance</span>
 		</div>
-		<div class="col-xs-6 col-sm-3 kpi">
-			<img src="{{ base_path }}assets/images/diaper.png" alt="Diaper">
+		<div class="col-xs-6 col-sm-4 col-md-2 kpi">
+			<img src="{{ base_path }}assets/images/diaper.png" class="img-responsive" alt="Diaper">
 			<h4><span id="diapersKPI"></span> Diapers</h4>
 			<span class="text-muted">dutifully changed</span>
 		</div>
-		<div class="col-xs-6 col-sm-3 kpi">
+		<div class="col-xs-6 col-sm-4 col-md-2 kpi">
 			<img src="{{ base_path }}assets/images/bathtub.png" class="img-responsive" alt="Bath">
 			<h4><span id="bathsKPI"></span> Baths</h4>
 			<span class="text-muted">getting squeaky clean</span>
+		</div>
+		<div class="col-xs-6 col-sm-4 col-md-2 kpi">
+			<img src="{{ base_path }}assets/images/body.png" class="img-responsive" alt="Growth">
+			<h4><span id="growthKPI"></span>x Bigger</h4>
+			<span class="text-muted">
+			than when
+			{% if site.data.baby.gender == 'female' %}
+			she
+			{% elsif site.data.baby.gender == 'male' %}
+			he
+			{% else %}
+			baby
+			{% endif %}
+			was born
+			</span>
 		</div>
 	</div>
 
@@ -106,16 +121,19 @@ description: Charts and stuff
 google.charts.load('current', {packages: ['corechart', 'timeline']});
 google.charts.setOnLoadCallback(drawCharts);
 
+var metadata = new Metadata({{ site.data.baby | jsonify }});
 var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
 var feeds = new Feeds({{ site.data.feeds | jsonify }});
 var excretions = new Excretions({{ site.data.excretions | jsonify }});
 var journals = new Journals({{ site.data.journal_entries | jsonify }});
 var growths = new Growths({{ site.data.growths | jsonify }});
 
+$("#ageKPI").html(metadata.ageLabel);
 $("#sleepHoursKPI").html(Math.round(sleeps.totalHours));
 $("#feedingsKPI").html(feeds.data.length);
 $("#diapersKPI").html(excretions.data.length);
 $("#bathsKPI").html(_.where(journals.data, {type: "Bath"}).length);
+$("#growthKPI").html(growths.weightChange.toFixed(1));
 
 function drawCharts() {
 	var timelineStart = new Date();
