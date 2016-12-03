@@ -68,6 +68,13 @@ class Data {
 
 		return view;
 	}
+
+	largest(property) {
+		return _.chain(this.data)
+			.pluck(property)
+			.max()
+			.value();
+	}
 }
 
 class Excretions extends Data {
