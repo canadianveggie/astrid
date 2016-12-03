@@ -138,7 +138,6 @@ $("#growthKPI").html(growths.weightChange.toFixed(1));
 function drawCharts() {
 	var timelineStart = new Date(_.max([sleeps.largest('end', feeds.largest('end'))]));
 	timelineStart.setDate(timelineStart.getDate() - 7); // 7 days before last event
-	console.log(timelineStart);
 	var timelineData = new TimelineData({Sleep: sleeps, Feeds:feeds, Diapers:excretions, Journal:journals}, timelineStart);
 
 	var timeline = new google.visualization.Timeline(document.getElementById('timeline'));
