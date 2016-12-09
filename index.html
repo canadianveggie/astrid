@@ -136,8 +136,9 @@ $("#bathsKPI").html(_.where(journals.data, {type: "Bath"}).length);
 $("#growthKPI").html(growths.weightChange.toFixed(1));
 
 function drawCharts() {
-	var timelineStart = new Date(_.max([sleeps.largest('end', feeds.largest('end'))]));
-	timelineStart.setDate(timelineStart.getDate() - 7); // 7 days before last event
+	var lastDataDate = new Date(_.max([sleeps.largest('end', feeds.largest('end'))]));
+	var timelineStart = new Date(lastDataDate.valueOf());
+	timelineStart.setDate(lastDataDate.getDate() - 7); // 7 days before last event
 	var timelineData = new TimelineData({Sleep: sleeps, Feeds:feeds, Diapers:excretions, Journal:journals}, timelineStart);
 
 	var timeline = new google.visualization.Timeline(document.getElementById('timeline'));
