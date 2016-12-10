@@ -197,7 +197,10 @@ class Sleeps extends Data {
 				let time = columnData[3].v;
 				let dayAdjustment = (time.getHours() < dayNightEndHour) ? -1 : 0;
 				return new Date(time.getFullYear(), time.getMonth(), time.getDate() + dayAdjustment);
-			}, type: 'datetime'}
+			}, type: 'datetime'},
+			{id: 'durationHour', label: 'Duration', derivativeFn: function (columnData, rawRow) {
+				return Math.round(columnData[5].v / 60 * 10) / 10;
+			}, type: 'number'}
 		]);
 	}
 
@@ -205,7 +208,7 @@ class Sleeps extends Data {
 		// Returns duration of longest n sleeps plush remainder in an array
 		// Result is always an array of n+1 elements
 		function longestDurations (sleeps, n) {
-			let durations = _.pluck(sleeps, "duration").sort(function(a, b) {
+			let durations = _.pluck(sleeps, "durationHour").sort(function(a, b) {
 				return b - a;
 			});
 			if (durations[0] < durations[1]) {

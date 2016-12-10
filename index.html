@@ -136,8 +136,9 @@ $("#bathsKPI").html(_.where(journals.data, {type: "Bath"}).length);
 $("#growthKPI").html(growths.weightChange.toFixed(1));
 
 function drawCharts() {
-	var timelineStart = new Date(_.max([sleeps.largest('end', feeds.largest('end'))]));
-	timelineStart.setDate(timelineStart.getDate() - 7); // 7 days before last event
+	var lastDataDate = new Date(_.max([sleeps.largest('end', feeds.largest('end'))]));
+	var timelineStart = new Date(lastDataDate.valueOf());
+	timelineStart.setDate(lastDataDate.getDate() - 7); // 7 days before last event
 	var timelineData = new TimelineData({Sleep: sleeps, Feeds:feeds, Diapers:excretions, Journal:journals}, timelineStart);
 
 	var timeline = new google.visualization.Timeline(document.getElementById('timeline'));
@@ -150,9 +151,14 @@ function drawCharts() {
 	// Filter to night sleeps and hide the column
 	longestNightSleepsDataView.setRows(longestNightSleepsDataView.getFilteredRows([{column: 1, value: 'Night'}]));
 	longestNightSleepsDataView.hideColumns([1]);
-	daySleepChart.draw(longestNightSleepsDataView, {isStacked: true});
+	daySleepChart.draw(longestNightSleepsDataView, {
+		isStacked: true,
+		vAxis: {
+			title: 'Hours'
+		}
+	});
 
-	var napsData = sleeps.dataView(['day', 'type', 'duration']);
+	var napsData = sleeps.dataView(['day', 'type', 'durationHour']);
 	napsData.setRows(napsData.getFilteredRows([{column: 1, value: 'Nap'}]));
 	napsData = google.visualization.data.group(napsData.toDataTable(), [0], [
 		{column: 2, label: 'Duration', aggregation: google.visualization.data.sum, type: 'number'},
@@ -162,16 +168,23 @@ function drawCharts() {
 	var napsChart = new google.visualization.ComboChart(document.getElementById('napsChart'));
 	napsChart.draw(napsData, {
 		seriesType: 'bars',
-		series: {1: {type: 'line', targetAxisIndex: 1}}
+		series: {1: {type: 'line', targetAxisIndex: 1}},
+		vAxis: {
+			title: 'Hours'
+		}
     });
 
-	var sleepData = sleeps.dataView(['day', 'duration']);
+	var sleepData = sleeps.dataView(['day', 'durationHour']);
 	sleepData = google.visualization.data.group(sleepData.toDataTable(), [0], [
 		{column: 1, label: 'Duration', aggregation: google.visualization.data.sum, type: 'number'}
 	]);
 
 	var sleepChart = new google.visualization.ColumnChart(document.getElementById('sleepChart'));
-	sleepChart.draw(sleepData);
+	sleepChart.draw(sleepData, {
+		vAxis: {
+			title: 'Hours'
+		}
+	});
 
 	var growthChart = new google.visualization.LineChart(document.getElementById('growthChart'));
 	var growthsDataView = growths.dataView(['day', 'weight', 'height', 'head']);
