@@ -190,7 +190,7 @@ class Sleeps extends Data {
 			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
 			{id: 'duration', label: 'Duration', orginalLabel: ' Approximate Duration (Minutes)', type: 'number'},
 			{id: 'type', label: 'Type', derivativeFn: function (columnData, rawRow) {
-				let time = columnData[3].v;
+				let time = columnData[1].v;
 				return time.getHours() >= dayNightStartHour|| time.getHours() < dayNightEndHour ? 'Night' : 'Nap';
 			}, type: 'string'},
 			{id: 'day', label: 'Day', derivativeFn: function (columnData, rawRow) {
