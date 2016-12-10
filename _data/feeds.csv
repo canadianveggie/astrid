@@ -1,4 +1,15 @@
 id, Start Time, End Time, Feed Type, Quantity (oz), Quantity (ml or g), Notes, Duration (Minutes), Food Type, Unit, Bottle Type
+1610,15:23:17 12-09-2016,15:34:30 12-09-2016,Left Breast,,,,11,Breast Milk,,
+1609,11:03:33 12-09-2016,11:19:30 12-09-2016,Right Breast,,,,15,Breast Milk,,
+1608,07:59:37 12-09-2016,08:19:14 12-09-2016,Left Breast,,,,19,Breast Milk,,
+1607,05:15:58 12-09-2016,05:26:18 12-09-2016,Right Breast,,,,10,Breast Milk,,
+1606,01:51:01 12-09-2016,02:05:47 12-09-2016,Left Breast,,,,14,Breast Milk,,
+1605,18:45:52 12-08-2016,18:57:34 12-08-2016,Right Breast,,,,11,Breast Milk,,
+1604,15:27:38 12-08-2016,15:37:01 12-08-2016,Left Breast,,,,9,Breast Milk,,
+1603,12:54:58 12-08-2016,13:11:40 12-08-2016,Right Breast,,,,16,Breast Milk,,
+1602,10:02:32 12-08-2016,10:12:54 12-08-2016,Left Breast,,,,10,Breast Milk,,
+1601,05:51:14 12-08-2016,06:02:54 12-08-2016,Right Breast,,,,11,Breast Milk,,
+1600,01:34:36 12-08-2016,01:45:27 12-08-2016,Left Breast,,,,10,Breast Milk,,
 1599,18:29:22 12-07-2016,18:41:10 12-07-2016,Bottle,3.55,105,,11,Liquid,METRIC,Pump
 1598,16:54:08 12-07-2016,17:04:13 12-07-2016,Left Breast,,,,10,Breast Milk,,
 1596,13:52:46 12-07-2016,14:07:22 12-07-2016,Right Breast,,,,14,Breast Milk,,
