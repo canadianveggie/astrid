@@ -19,12 +19,17 @@
     "underscore": "^1.8.3",
     "moment": "^2.16.0",
     "jquery": "^3.1.1",
-    "bootstrap-sass": "boostrap-sass#^3.3.7"
+    "bootstrap-sass": "boostrap-sass#^3.3.7",
+    "blueimp-gallery": "^2.22.0"
   },
   "exportsOverride": {
     "bootstrap-sass": {
-      "js": ["assets/javascripts"],
-      "css": ["assets/stylesheets"]
+      "js": [
+        "assets/javascripts"
+      ],
+      "css": [
+        "assets/stylesheets"
+      ]
     }
   }
 }
