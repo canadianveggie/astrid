@@ -24,6 +24,11 @@ github_username:  canadianveggie
 github_url: https://github.com/canadianveggie/astrid
 google_analytics: UA-88136017-1
 
+flickr:
+  api_key: 29bcddc4ee38d133a1d53cd1e20a0a6a
+  photoset: "72157673754063273"
+  user_id: 34962573@N00
+
 sass:
   sass_dir: vendor/css/bootstrap-sass
 
