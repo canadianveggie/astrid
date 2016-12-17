@@ -3,13 +3,16 @@ layout: default
 description: Charts and stuff
 ---
 
+<link rel="stylesheet" type="text/css" href="{{ base_path }}vendor/bootstrap/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="{{ base_path }}vendor/blueimp-gallery/css/blueimp-gallery.css">
 <script src="{{ base_path }}vendor/jquery/jquery.js"></script>
 <script src="{{ base_path }}vendor/moment/moment.js"></script>
 <script src="{{ base_path }}vendor/underscore/underscore.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="{{ base_path }}vendor/js/bootstrap-sass/bootstrap.js"></script>
+<script src="{{ base_path }}vendor/blueimp-gallery/js/blueimp-gallery.js"></script>
 <script src="{{ base_path }}js/data.js"></script>
-
+<script src="{{ base_path }}js/flickr.js"></script>
 
 <div class="container-fluid">
 	<div class="row kpis">
@@ -115,6 +118,14 @@ description: Charts and stuff
 			<div id="growthChart" class="google-chart"></div>
 		</div>
 	</div>
+
+	{% if site.flickr and site.flickr.photoset %}
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="photos"></div>
+		</div>
+	</div>
+	{% endif %}
 </div>
 
 <script type="text/javascript">
@@ -134,6 +145,12 @@ $("#feedingsKPI").html(feeds.data.length);
 $("#diapersKPI").html(excretions.data.length);
 $("#bathsKPI").html(_.where(journals.data, {type: "Bath"}).length);
 $("#growthKPI").html(growths.weightChange.toFixed(1));
+
+var flickr = {{ site.flickr | jsonify }};
+if (flickr && flickr.api_key) {
+	photoSet = new PhotoSet(flickr, $('#photos'));
+	photoSet.draw();
+}
 
 function drawCharts() {
 	var lastDataDate = new Date(_.max([sleeps.largest('end', feeds.largest('end'))]));
@@ -172,7 +189,7 @@ function drawCharts() {
 		vAxis: {
 			title: 'Hours'
 		}
-    });
+	});
 
 	var sleepData = sleeps.dataView(['day', 'durationHour']);
 	sleepData = google.visualization.data.group(sleepData.toDataTable(), [0], [
