@@ -13,9 +13,12 @@ description: Charts and stuff
 <script src="{{ base_path }}js/data.js"></script>
 <script src="{{ base_path }}js/flickr.js"></script>
 
-<div class="container-fluid">
-	<div class="row kpis">
-		<div class="col-xs-6 col-sm-4 col-md-2 kpi">
+<div data-spy="scroll" data-target=".navbar" data-offset="150">
+
+<nav class="row kpis navbar-nav navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="nav col-xs-6 col-sm-4 col-md-2 kpi">
+			<a href="#age">
 			{% if site.data.baby.picture_url %}
 			<img src="{{ site.data.baby.picture_url }}" class="img-responsive circle" alt="Baby">
 			{% elsif site.data.baby.gender == 'female' %}
@@ -23,31 +26,42 @@ description: Charts and stuff
 			{% else %}
 			<img src="{{ base_path }}assets/images/baby.png" class="img-responsive" alt="Baby">
 			{% endif %}
+			</a>
 			<h4><span id="ageKPI"></span></h4>
 			<span class="text-muted">exploring this world</span>
 		</div>
-		<div class="col-xs-6 col-sm-4 col-md-2 kpi">
+		<div class="nav col-xs-6 col-sm-4 col-md-2 kpi">
+			<a href="#sleep">
 			<img src="{{ base_path }}assets/images/crib-toy.png" class="img-responsive" alt="Sleep">
+			</a>
 			<h4><span id="sleepHoursKPI"></span> Hours</h4>
 			<span class="text-muted">in peaceful sleep</span>
 		</div>
-		<div class="col-xs-6 col-sm-4 col-md-2 kpi">
+		<div class="nav col-xs-6 col-sm-4 col-md-2 kpi">
+			<a href="#feedings">
 			<img src="{{ base_path }}assets/images/feeding-bottle-1.png" class="img-responsive" alt="Feeding">
+			</a>
 			<h4><span id="feedingsKPI"></span> Feedings</h4>
 			<span class="text-muted">ingesting sustenance</span>
 		</div>
-		<div class="col-xs-6 col-sm-4 col-md-2 kpi">
+		<div class="nav col-xs-6 col-sm-4 col-md-2 kpi">
+			<a href="#diapers">
 			<img src="{{ base_path }}assets/images/diaper.png" class="img-responsive" alt="Diaper">
+			</a>
 			<h4><span id="diapersKPI"></span> Diapers</h4>
 			<span class="text-muted">dutifully changed</span>
 		</div>
-		<div class="col-xs-6 col-sm-4 col-md-2 kpi">
+		<div class="nav col-xs-6 col-sm-4 col-md-2 kpi">
+			<a href="#baths">
 			<img src="{{ base_path }}assets/images/bathtub.png" class="img-responsive" alt="Bath">
+			</a>
 			<h4><span id="bathsKPI"></span> Baths</h4>
 			<span class="text-muted">getting squeaky clean</span>
 		</div>
-		<div class="col-xs-6 col-sm-4 col-md-2 kpi">
+		<div class="nav col-xs-6 col-sm-4 col-md-2 kpi">
+			<a href="#growth">
 			<img src="{{ base_path }}assets/images/body.png" class="img-responsive" alt="Growth">
+			</a>
 			<h4><span id="growthKPI"></span>x Bigger</h4>
 			<span class="text-muted">
 			than when
@@ -62,7 +76,9 @@ description: Charts and stuff
 			</span>
 		</div>
 	</div>
+</nav>
 
+<div id="age" class="container-fluid section">
 	<div class="row">
 		<div class="col-xs-12">
 			<h2>Recent Events</h2>
@@ -74,6 +90,16 @@ description: Charts and stuff
 		</div>
 	</div>
 
+	{% if site.flickr and site.flickr.photoset %}
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="photos"></div>
+		</div>
+	</div>
+	{% endif %}
+</div>
+
+<div id="sleep" class="container-fluid section">
 	<div class="row">
 		<div class="col-xs-12">
 			<h2>Night Sleeps</h2>
@@ -106,7 +132,10 @@ description: Charts and stuff
 			<div id="sleepChart" class="google-chart"></div>
 		</div>
 	</div>
+</div>
 
+
+<div id="growth" class="container-fluid section">
 	<div class="row">
 		<div class="col-xs-12">
 			<h2>Growth</h2>
@@ -117,14 +146,8 @@ description: Charts and stuff
 			<div id="growthChart" class="google-chart"></div>
 		</div>
 	</div>
+</div>
 
-	{% if site.flickr and site.flickr.photoset %}
-	<div class="row">
-		<div class="col-xs-12">
-			<div id="photos"></div>
-		</div>
-	</div>
-	{% endif %}
 </div>
 
 <script type="text/javascript">
