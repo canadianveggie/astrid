@@ -3,6 +3,10 @@
 ---
 @charset "utf-8";
 
+.github-fork-ribbon.right-bottom:before {
+    background-color: #2ba5f7;
+}
+
 .google-chart {
 	height: 300px;
 	width: 100%;
