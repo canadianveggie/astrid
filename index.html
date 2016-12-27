@@ -27,43 +27,43 @@ description: Charts and stuff
 			<img src="{{ base_path }}assets/images/baby.png" class="img-responsive" alt="Baby">
 			{% endif %}
 			</a>
-			<h4><span id="ageKPI"></span></h4>
-			<span class="text-muted">exploring this world</span>
+			<h4 class="kpi-metric"><span id="ageKPI"></span></h4>
+			<span class="kpi-description text-muted">exploring this world</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#sleep">
 			<img src="{{ base_path }}assets/images/crib-toy.png" class="img-responsive" alt="Sleep">
 			</a>
-			<h4><span id="sleepHoursKPI"></span> Hours</h4>
-			<span class="text-muted">in peaceful sleep</span>
+			<h4 class="kpi-metric"><span id="sleepHoursKPI"></span> Hours</h4>
+			<span class="kpi-description text-muted">in peaceful sleep</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#feedings">
 			<img src="{{ base_path }}assets/images/feeding-bottle-1.png" class="img-responsive" alt="Feeding">
 			</a>
-			<h4><span id="feedingsKPI"></span> Feedings</h4>
-			<span class="text-muted">ingesting sustenance</span>
+			<h4 class="kpi-metric"><span id="feedingsKPI"></span> Feedings</h4>
+			<span class="kpi-description text-muted">ingesting sustenance</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#diapers">
 			<img src="{{ base_path }}assets/images/diaper.png" class="img-responsive" alt="Diaper">
 			</a>
-			<h4><span id="diapersKPI"></span> Diapers</h4>
-			<span class="text-muted">dutifully changed</span>
+			<h4 class="kpi-metric"><span id="diapersKPI"></span> Diapers</h4>
+			<span class="kpi-description text-muted">dutifully changed</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#baths">
 			<img src="{{ base_path }}assets/images/bathtub.png" class="img-responsive" alt="Bath">
 			</a>
-			<h4><span id="bathsKPI"></span> Baths</h4>
-			<span class="text-muted">getting squeaky clean</span>
+			<h4 class="kpi-metric"><span id="bathsKPI"></span> Baths</h4>
+			<span class="kpi-description text-muted">getting squeaky clean</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#growth">
 			<img src="{{ base_path }}assets/images/body.png" class="img-responsive" alt="Growth">
 			</a>
-			<h4><span id="growthKPI"></span>x Bigger</h4>
-			<span class="text-muted">
+			<h4 class="kpi-metric"><span id="growthKPI"></span>x Bigger</h4>
+			<span class="kpi-description text-muted">
 			than when
 			{% if site.data.baby.gender == 'female' %}
 			she
@@ -78,6 +78,7 @@ description: Charts and stuff
 	</div>
 </nav>
 
+<div class="sections">
 <div id="age" class="container-fluid section">
 	<div class="row">
 		<div class="col-xs-12">
@@ -150,6 +151,8 @@ description: Charts and stuff
 
 </div>
 
+</div>
+
 <script type="text/javascript">
 google.charts.load('current', {packages: ['corechart', 'timeline']});
 google.charts.setOnLoadCallback(drawCharts);
@@ -173,6 +176,23 @@ if (flickr && flickr.api_key) {
 	photoSet = new PhotoSet(flickr, $('#photos'));
 	photoSet.draw();
 }
+
+function init() {
+	window.addEventListener('scroll', function(e){
+		var distanceY = window.pageYOffset || document.documentElement.scrollTop,
+			shrinkOn = 50,
+			navbar = $(".navbar-nav");
+		if (distanceY > shrinkOn) {
+			navbar.addClass("smaller");
+		} else {
+			if (navbar.hasClass("smaller")) {
+				navbar.removeClass("smaller");
+			}
+		}
+	});
+}
+
+window.onload = init();
 
 function drawCharts() {
 	var lastDataDate = new Date(_.max([sleeps.largest('end', feeds.largest('end'))]));

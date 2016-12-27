@@ -10,8 +10,12 @@
 	padding-right: 40px;
 }
 
+.sections {
+	padding-top: 150px;
+}
+
 .section {
-	padding-top: 200px;
+	padding-top: 50px;
 }
 
 .kpis {
@@ -37,6 +41,38 @@
 
 .kpi img.circle {
 	border-radius: 50%;
+}
+
+nav {
+	transition: height 0.3s;
+}
+
+nav h4 {
+	transition-delay: visibility 0.1s;
+	transition: visibility 0.1s;
+}
+
+nav span {
+	transition: visibility 0.1s;
+}
+
+nav img {
+	transition: max-height 0.3s;
+}
+
+nav.smaller {
+	height: 50px;
+}
+nav.smaller .kpi img {
+	max-height: 45px;
+}
+
+nav.smaller .kpi-metric {
+	visibility: hidden;
+}
+
+nav.smaller .kpi-description {
+	visibility: hidden;
 }
 
 @import "bootstrap";
