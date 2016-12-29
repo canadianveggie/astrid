@@ -14,6 +14,7 @@ class MilestonesCarousel {
 					.html(milestone.date)
 				).append($('<img>')
 					.prop('src', milestone.photo)
+					.addClass('img-responsive')
 				).append($('<h5>')
 					.html(milestone.description)
 				)
@@ -43,6 +44,7 @@ class MilestonesCarousel {
 				  settings: {
 					slidesToShow: 2,
 					slidesToScroll: 2,
+					dots: false
 				  }
 				},
 				{
@@ -50,6 +52,7 @@ class MilestonesCarousel {
 				  settings: {
 					slidesToShow: 1,
 					slidesToScroll: 1,
+					dots: false
 				  }
 				}
 			]
