@@ -79,6 +79,6 @@ nav.smaller .kpi-description {
 	visibility: hidden;
 }
 
-$icon-font-path: '/vendor/bootstrap-sass/fonts/bootstrap/';
+$icon-font-path: '{{ base_path }}/vendor/bootstrap-sass/fonts/bootstrap/';
 
 @import "bootstrap";
