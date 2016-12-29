@@ -20,7 +20,6 @@
     "moment": "^2.16.0",
     "jquery": "^3.1.1",
     "bootstrap-sass": "boostrap-sass#^3.3.7",
-    "blueimp-gallery": "^2.22.0",
     "github-fork-ribbon-css": "^0.2.0"
   },
   "exportsOverride": {
