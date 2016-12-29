@@ -24,7 +24,7 @@ github_username:  canadianveggie
 github_url: https://github.com/canadianveggie/astrid
 
 sass:
-  sass_dir: vendor/css/bootstrap-sass
+  sass_dir: vendor/bootstrap-sass/stylesheets/
 
 
 # Build settings

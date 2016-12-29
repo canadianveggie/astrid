@@ -25,12 +25,7 @@
   },
   "exportsOverride": {
     "bootstrap-sass": {
-      "js": [
-        "assets/javascripts"
-      ],
-      "css": [
-        "assets/stylesheets"
-      ]
+      "": ["assets"]
     }
   }
 }
