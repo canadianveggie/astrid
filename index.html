@@ -3,15 +3,17 @@ layout: default
 description: Charts and stuff
 ---
 
-<link rel="stylesheet" type="text/css" href="{{ base_path }}vendor/blueimp-gallery/css/blueimp-gallery.css">
+<link rel="stylesheet" type="text/css" href="{{ base_path }}vendor/slick-carousel/slick.css">
+<link rel="stylesheet" type="text/css" href="{{ base_path }}assets/slick-theme.css">
 <script src="{{ base_path }}vendor/jquery/jquery.js"></script>
 <script src="{{ base_path }}vendor/moment/moment.js"></script>
 <script src="{{ base_path }}vendor/underscore/underscore.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script src="{{ base_path }}vendor/js/bootstrap-sass/bootstrap.js"></script>
-<script src="{{ base_path }}vendor/blueimp-gallery/js/blueimp-gallery.js"></script>
+<script src="{{ base_path }}vendor/bootstrap-sass/javascripts/bootstrap.js"></script>
+<script src="{{ base_path }}vendor/slick-carousel/slick.js"></script>
 <script src="{{ base_path }}js/data.js"></script>
-<script src="{{ base_path }}js/flickr.js"></script>
+<script src="{{ base_path }}js/headerShrink.js"></script>
+<script src="{{ base_path }}js/milestonesCarousel.js"></script>
 
 <div data-spy="scroll" data-target=".navbar" data-offset="150">
 
@@ -80,6 +82,21 @@ description: Charts and stuff
 
 <div class="sections">
 <div id="age" class="container-fluid section">
+	{% if site.data.milestones.size > 0 %}
+	<div class="row">
+		<div class="col-xs-12">
+			<h2>Milestones</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="milestones">
+
+			</div>
+		</div>
+	</div>
+	{% endif %}
+
 	<div class="row">
 		<div class="col-xs-12">
 			<h2>Recent Events</h2>
@@ -90,14 +107,6 @@ description: Charts and stuff
 			<div id="timeline" class="google-chart"></div>
 		</div>
 	</div>
-
-	{% if site.flickr and site.flickr.photoset %}
-	<div class="row">
-		<div class="col-xs-12">
-			<div id="photos"></div>
-		</div>
-	</div>
-	{% endif %}
 </div>
 
 <div id="sleep" class="container-fluid section">
@@ -171,25 +180,17 @@ $("#diapersKPI").html(excretions.data.length);
 $("#bathsKPI").html(_.where(journals.data, {type: "Bath"}).length);
 $("#growthKPI").html(growths.weightChange.toFixed(1));
 
-var flickr = {{ site.flickr | jsonify }};
-if (flickr && flickr.api_key) {
-	photoSet = new PhotoSet(flickr, $('#photos'));
-	photoSet.draw();
+var milestones = {{ site.data.milestones | jsonify }};
+var milestonesCarousel;
+if (milestones && milestones.length) {
+	milestonesCarousel = new MilestonesCarousel(milestones, $("#milestones"));
 }
 
 function init() {
-	window.addEventListener('scroll', function(e){
-		var distanceY = window.pageYOffset || document.documentElement.scrollTop,
-			shrinkOn = 50,
-			navbar = $(".navbar-nav");
-		if (distanceY > shrinkOn) {
-			navbar.addClass("smaller");
-		} else {
-			if (navbar.hasClass("smaller")) {
-				navbar.removeClass("smaller");
-			}
-		}
-	});
+	addHeaderShrink();
+	if (milestonesCarousel) {
+		milestonesCarousel.draw();
+	}
 }
 
 window.onload = init();

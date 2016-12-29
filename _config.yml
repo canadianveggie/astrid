@@ -30,7 +30,7 @@ flickr:
   user_id: 34962573@N00
 
 sass:
-  sass_dir: vendor/css/bootstrap-sass
+  sass_dir: vendor/bootstrap-sass/stylesheets/
 
 # Build settings
 markdown: kramdown
