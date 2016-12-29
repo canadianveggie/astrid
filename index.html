@@ -3,17 +3,17 @@ layout: default
 description: Charts and stuff
 ---
 
-<link rel="stylesheet" type="text/css" href="{{ base_path }}vendor/slick-carousel/slick.css">
-<link rel="stylesheet" type="text/css" href="{{ base_path }}assets/slick-theme.css">
-<script src="{{ base_path }}vendor/jquery/jquery.js"></script>
-<script src="{{ base_path }}vendor/moment/moment.js"></script>
-<script src="{{ base_path }}vendor/underscore/underscore.js"></script>
+<link rel="stylesheet" type="text/css" href="vendor/slick-carousel/slick.css">
+<link rel="stylesheet" type="text/css" href="assets/slick-theme.css">
+<script src="vendor/jquery/jquery.js"></script>
+<script src="vendor/moment/moment.js"></script>
+<script src="vendor/underscore/underscore.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script src="{{ base_path }}vendor/bootstrap-sass/javascripts/bootstrap.js"></script>
-<script src="{{ base_path }}vendor/slick-carousel/slick.js"></script>
-<script src="{{ base_path }}js/data.js"></script>
-<script src="{{ base_path }}js/headerShrink.js"></script>
-<script src="{{ base_path }}js/milestonesCarousel.js"></script>
+<script src="vendor/bootstrap-sass/javascripts/bootstrap.js"></script>
+<script src="vendor/slick-carousel/slick.js"></script>
+<script src="js/data.js"></script>
+<script src="js/headerShrink.js"></script>
+<script src="js/milestonesCarousel.js"></script>
 
 <div data-spy="scroll" data-target=".navbar" data-offset="150">
 
@@ -24,9 +24,9 @@ description: Charts and stuff
 			{% if site.data.baby.picture_url %}
 			<img src="{{ site.data.baby.picture_url }}" class="img-responsive circle" alt="Baby">
 			{% elsif site.data.baby.gender == 'female' %}
-			<img src="{{ base_path }}assets/images/baby-1.png" class="img-responsive" alt="Baby">
+			<img src="assets/images/baby-1.png" class="img-responsive" alt="Baby">
 			{% else %}
-			<img src="{{ base_path }}assets/images/baby.png" class="img-responsive" alt="Baby">
+			<img src="assets/images/baby.png" class="img-responsive" alt="Baby">
 			{% endif %}
 			</a>
 			<h4 class="kpi-metric"><span id="ageKPI"></span></h4>
@@ -34,35 +34,35 @@ description: Charts and stuff
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#sleep">
-			<img src="{{ base_path }}assets/images/crib-toy.png" class="img-responsive" alt="Sleep">
+			<img src="assets/images/crib-toy.png" class="img-responsive" alt="Sleep">
 			</a>
 			<h4 class="kpi-metric"><span id="sleepHoursKPI"></span> Hours</h4>
 			<span class="kpi-description text-muted">in peaceful sleep</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#feedings">
-			<img src="{{ base_path }}assets/images/feeding-bottle-1.png" class="img-responsive" alt="Feeding">
+			<img src="assets/images/feeding-bottle-1.png" class="img-responsive" alt="Feeding">
 			</a>
 			<h4 class="kpi-metric"><span id="feedingsKPI"></span> Feedings</h4>
 			<span class="kpi-description text-muted">ingesting sustenance</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#diapers">
-			<img src="{{ base_path }}assets/images/diaper.png" class="img-responsive" alt="Diaper">
+			<img src="assets/images/diaper.png" class="img-responsive" alt="Diaper">
 			</a>
 			<h4 class="kpi-metric"><span id="diapersKPI"></span> Diapers</h4>
 			<span class="kpi-description text-muted">dutifully changed</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#baths">
-			<img src="{{ base_path }}assets/images/bathtub.png" class="img-responsive" alt="Bath">
+			<img src="assets/images/bathtub.png" class="img-responsive" alt="Bath">
 			</a>
 			<h4 class="kpi-metric"><span id="bathsKPI"></span> Baths</h4>
 			<span class="kpi-description text-muted">getting squeaky clean</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#growth">
-			<img src="{{ base_path }}assets/images/body.png" class="img-responsive" alt="Growth">
+			<img src="assets/images/body.png" class="img-responsive" alt="Growth">
 			</a>
 			<h4 class="kpi-metric"><span id="growthKPI"></span>x Bigger</h4>
 			<span class="kpi-description text-muted">
