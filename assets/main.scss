@@ -4,7 +4,7 @@
 @charset "utf-8";
 
 .github-fork-ribbon.right-bottom:before {
-    background-color: #2ba5f7;
+	background-color: #2ba5f7;
 }
 
 .google-chart {
@@ -15,7 +15,7 @@
 }
 
 .sections {
-	padding-top: 150px;
+	padding-top: 200px;
 }
 
 .section {
@@ -47,9 +47,8 @@
 	border-radius: 50%;
 }
 
-.kpi-metric span {
+.kpi-metric {
 	font-weight: bold;
-	font-size: 2.0em;
 }
 
 nav {
@@ -89,15 +88,12 @@ $icon-font-path: '../vendor/bootstrap-sass/fonts/bootstrap/';
 
 @import "bootstrap";
 
-@media (max-width: $screen-sm) {
-    body{font-size: 14px;}
-}
+@media (min-width: $screen-lg) {
+	body{
+		font-size: 14px;
+	}
 
-
-@media (max-width: $screen-xs) {
-    body{font-size: 10px;}
-}
-
-h4 {
-    font-size: 1.4em;
+	.kpi-metric {
+		font-size: 4.0em;
+	}
 }
