@@ -348,12 +348,7 @@ class Metadata {
 		return (new Date() - this.birthdate) / 24/60/60/1000;
 	}
 
-	get ageLabel () {
-		var ageInDays = this.ageInDays;
-		if (ageInDays < 35) {
-			return Math.ceil(ageInDays) + " Days";
-		} else {
-		 	return (ageInDays / 7).toFixed(1) + " Weeks";
-		}
+	get ageInWeeks () {
+		return Math.round(this.ageInDays / 7 * 10) / 10;
 	}
 }
