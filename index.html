@@ -29,7 +29,7 @@ description: Charts and stuff
 			<img src="assets/images/baby.png" class="img-responsive" alt="Baby">
 			{% endif %}
 			</a>
-			<h4 class="kpi-metric"><span id="ageKPI"></span></h4>
+			<h4 class="kpi-metric"><span id="ageKPI"></span> Weeks</h4>
 			<span class="kpi-description text-muted">exploring this world</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
@@ -173,7 +173,7 @@ var excretions = new Excretions({{ site.data.excretions | jsonify }});
 var journals = new Journals({{ site.data.journal_entries | jsonify }});
 var growths = new Growths({{ site.data.growths | jsonify }});
 
-$("#ageKPI").html(metadata.ageLabel);
+$("#ageKPI").html(metadata.ageInWeeks);
 $("#sleepHoursKPI").html(Math.round(sleeps.totalHours));
 $("#feedingsKPI").html(feeds.data.length);
 $("#diapersKPI").html(excretions.data.length);
