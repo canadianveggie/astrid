@@ -204,7 +204,7 @@ class Sleeps extends Data {
 		]);
 	}
 
-	longestDurationsDataTable() {
+	longestDurationsDataTable(type) {
 		// Returns duration of longest n sleeps plush remainder in an array
 		// Result is always an array of n+1 elements
 		function longestDurations (sleeps, n) {
@@ -228,19 +228,16 @@ class Sleeps extends Data {
 
 		var dataTable = new google.visualization.DataTable();
 		dataTable.addColumn({id: 'day', label: 'Day', type: 'date'});
-		dataTable.addColumn({id: 'type', label: 'Type', type: 'string'});
 		dataTable.addColumn({id: 'longest', label: 'Longest', type: 'number'});
 		dataTable.addColumn({id: 'secondLongest', label: 'Second Longest', type: 'number'});
 		dataTable.addColumn({id: 'remainder', label: 'Remainder', type: 'number'});
 
 		_.each(this.sleepsByDay, function (sleepDay, day) {
-			let napsAndSleeps = _.groupBy(sleepDay, 'type');
-			_.each(napsAndSleeps, function (halfDaySleep, type) {
-				let sleepDurations = longestDurations(halfDaySleep, 2);
-				sleepDurations.unshift(type);
-				sleepDurations.unshift(new Date(day));
-				dataTable.addRow(sleepDurations);
-			});
+			let halfDaySleep = _.where(sleepDay, {'type': type});
+			let sleepDurations = longestDurations(halfDaySleep, 2);
+			sleepDurations.unshift(new Date(day));
+
+			dataTable.addRow(sleepDurations);
 		});
 
 		return dataTable;

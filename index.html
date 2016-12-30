@@ -109,7 +109,7 @@ description: Charts and stuff
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
-			<div id="daySleepChart" class="google-chart"></div>
+			<div id="nightSleepChart" class="google-chart"></div>
 		</div>
 	</div>
 
@@ -196,14 +196,10 @@ function drawCharts() {
 	var timeline = new google.visualization.Timeline(document.getElementById('timeline'));
 	timeline.draw(timelineData.dataTable, {timeline: {showBarLabels:false}});
 
-	var daySleepChart = new google.visualization.SteppedAreaChart(document.getElementById('daySleepChart'));
+	var nightSleepChart = new google.visualization.SteppedAreaChart(document.getElementById('nightSleepChart'));
 
-	var longestSleepsDataTable = sleeps.longestDurationsDataTable();
-	var longestNightSleepsDataView = new google.visualization.DataView(longestSleepsDataTable);
-	// Filter to night sleeps and hide the column
-	longestNightSleepsDataView.setRows(longestNightSleepsDataView.getFilteredRows([{column: 1, value: 'Night'}]));
-	longestNightSleepsDataView.hideColumns([1]);
-	daySleepChart.draw(longestNightSleepsDataView, {
+	var longestSleepsDataTable = sleeps.longestDurationsDataTable('Night');
+	nightSleepChart.draw(longestSleepsDataTable, {
 		isStacked: true,
 		vAxis: {
 			title: 'Hours'
