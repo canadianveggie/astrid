@@ -29,52 +29,44 @@ description: Charts and stuff
 			<img src="assets/images/baby.png" class="img-responsive" alt="Baby">
 			{% endif %}
 			</a>
-			<h4 class="kpi-metric"><span id="ageKPI"></span> Weeks</h4>
-			<span class="kpi-description text-muted">exploring this world</span>
+			<span class="kpi-metric" id="ageKPI"></span>
+			<span class="kpi-description text-muted">Weeks old</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#sleep">
 			<img src="assets/images/crib-toy.png" class="img-responsive" alt="Sleep">
 			</a>
-			<h4 class="kpi-metric"><span id="sleepHoursKPI"></span> Hours</h4>
-			<span class="kpi-description text-muted">in peaceful sleep</span>
+			<span class="kpi-metric" id="sleepHoursKPI"></span>
+			<span class="kpi-description text-muted">Hours sleeping</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#feedings">
 			<img src="assets/images/feeding-bottle-1.png" class="img-responsive" alt="Feeding">
 			</a>
-			<h4 class="kpi-metric"><span id="feedingsKPI"></span> Feedings</h4>
-			<span class="kpi-description text-muted">ingesting sustenance</span>
+			<span class="kpi-metric" id="feedingsKPI"></span>
+			<span class="kpi-description text-muted">Feedings</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#diapers">
 			<img src="assets/images/diaper.png" class="img-responsive" alt="Diaper">
 			</a>
-			<h4 class="kpi-metric"><span id="diapersKPI"></span> Diapers</h4>
-			<span class="kpi-description text-muted">dutifully changed</span>
+			<span class="kpi-metric" id="diapersKPI"></span>
+			<span class="kpi-description text-muted">Diapers changed</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#baths">
 			<img src="assets/images/bathtub.png" class="img-responsive" alt="Bath">
 			</a>
-			<h4 class="kpi-metric"><span id="bathsKPI"></span> Baths</h4>
-			<span class="kpi-description text-muted">getting squeaky clean</span>
+			<span class="kpi-metric" id="bathsKPI"></span>
+			<span class="kpi-description text-muted">Baths</span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#growth">
 			<img src="assets/images/body.png" class="img-responsive" alt="Growth">
 			</a>
-			<h4 class="kpi-metric"><span id="growthKPI"></span>x Bigger</h4>
+			<span class="kpi-metric" id="growthKPI"></span>
 			<span class="kpi-description text-muted">
-			than when
-			{% if site.data.baby.gender == 'female' %}
-			she
-			{% elsif site.data.baby.gender == 'male' %}
-			he
-			{% else %}
-			baby
-			{% endif %}
-			was born
+			Bigger
 			</span>
 		</div>
 	</div>
@@ -178,7 +170,7 @@ $("#sleepHoursKPI").html(Math.round(sleeps.totalHours));
 $("#feedingsKPI").html(feeds.data.length);
 $("#diapersKPI").html(excretions.data.length);
 $("#bathsKPI").html(_.where(journals.data, {type: "Bath"}).length);
-$("#growthKPI").html(growths.weightChange.toFixed(1));
+$("#growthKPI").html(growths.weightChange.toFixed(1) + "x");
 
 var milestones = {{ site.data.milestones | jsonify }};
 var milestonesCarousel;
