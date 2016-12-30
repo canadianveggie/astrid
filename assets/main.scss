@@ -81,4 +81,18 @@ nav.smaller .kpi-description {
 
 $icon-font-path: '../vendor/bootstrap-sass/fonts/bootstrap/';
 
+
 @import "bootstrap";
+
+@media (max-width: $screen-sm) {
+    body{font-size: 14px;}
+}
+
+
+@media (max-width: $screen-xs) {
+    body{font-size: 10px;}
+}
+
+h4 {
+    font-size: 1.4em;
+}
