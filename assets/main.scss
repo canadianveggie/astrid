@@ -15,20 +15,21 @@
 }
 
 .sections {
-	padding-top: 200px;
+	padding-top: 75px;
 }
 
 .section {
-	padding-top: 50px;
+	padding-top: 40px;
 }
 
 .kpis {
+	width: 100%;
 	margin-top: 30px;
 	margin-bottom: 30px;
 	text-align: center;
-	height: 200px;
 	background-color: #A6C4DE;
 	border-style: solid;
+	padding-bottom: 5px;
 }
 
 .kpi h4 {
@@ -70,6 +71,8 @@ nav img {
 }
 
 nav.smaller {
+	top: 0;
+	position: fixed;
 	height: 50px;
 }
 nav.smaller .kpi img {
@@ -89,6 +92,12 @@ $icon-font-path: '../vendor/bootstrap-sass/fonts/bootstrap/';
 
 @import "bootstrap";
 
+@media (min-width: $screen-sm-min) {
+	.sections {
+		padding-top: 150px;
+	}
+}
+
 @media (min-width: $screen-lg) {
 	body{
 		font-size: 14px;
@@ -96,5 +105,9 @@ $icon-font-path: '../vendor/bootstrap-sass/fonts/bootstrap/';
 
 	.kpi-metric {
 		font-size: 4.0em;
+	}
+
+	.sections {
+		padding-top: 200px;
 	}
 }
