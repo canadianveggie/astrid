@@ -118,6 +118,15 @@ class Feeds extends Data {
 				let endTime = columnData[2].v;
 				return new Date((startTime.getTime() + endTime.getTime()) / 2)
 			}, type: 'datetime'},
+			{id: 'time', label: 'Time', derivativeFn: function (columnData, rawRow) {
+				let startTime = columnData[1].v;
+				let endTime = columnData[2].v;
+				return new Date((startTime.getTime() + endTime.getTime()) / 2)
+			}, type: 'datetime'},
+			{id: 'day', label: 'Day', derivativeFn: function (columnData, rawRow) {
+				let time = columnData[4].v;
+				return new Date(time.getFullYear(), time.getMonth(), time.getDate());
+			}, type: 'date'},
 			{id: 'type', label: 'Feed Type', orginalLabel: ' Feed Type', type: 'string'},
 			{id: 'Quantity', label: 'Quantity', orginalLabel: ' Quantity (oz)', type: 'number'},
 			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
@@ -126,6 +135,29 @@ class Feeds extends Data {
 			{id: 'unit', label: 'unit', orginalLabel: ' Unit', type: 'string'},
 			{id: 'bottleType', label: 'Bottle Type', orginalLabel: ' Bottle Type', type: 'string'}
 		]);
+	}
+
+	get feedingsByDay () {
+		return _.groupBy(this.data, 'day', this);
+	}
+
+	medianTimeBetweenFeedings () {
+		var dataTable = new google.visualization.DataTable();
+		dataTable.addColumn({id: 'day', label: 'Day', type: 'date'});
+		dataTable.addColumn({id: 'median', label: 'Median Time Between Feedings', type: 'number'});
+		dataTable.addColumn({id: 'feedingsPerDay', label: 'Feedings Per Day', type: 'number'});
+
+		_.each(this.feedingsByDay, function (feedings, day) {
+			feedings = _.sortBy(feedings, "start");
+			let durationsBetween = [];
+			for (let i=0; i < feedings.length - 1; i++) {
+				let duration = feedings[i+1].start.valueOf() - feedings[i].end.valueOf();
+				durationsBetween.push(duration / 1000 / 60 / 60); // In hours
+			}
+			dataTable.addRow([new Date(day), math.round(math.median(durationsBetween), 1), feedings.length]);
+		});
+
+		return dataTable;
 	}
 }
 
@@ -197,9 +229,9 @@ class Sleeps extends Data {
 				let time = columnData[3].v;
 				let dayAdjustment = (time.getHours() < dayNightEndHour) ? -1 : 0;
 				return new Date(time.getFullYear(), time.getMonth(), time.getDate() + dayAdjustment);
-			}, type: 'datetime'},
+			}, type: 'date'},
 			{id: 'durationHour', label: 'Duration', derivativeFn: function (columnData, rawRow) {
-				return Math.round(columnData[5].v / 60 * 10) / 10;
+				return math.round(columnData[5].v / 60, 1);
 			}, type: 'number'}
 		]);
 	}
@@ -346,6 +378,6 @@ class Metadata {
 	}
 
 	get ageInWeeks () {
-		return Math.round(this.ageInDays / 7 * 10) / 10;
+		return math.round(this.ageInDays / 7, 1);
 	}
 }
