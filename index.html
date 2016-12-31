@@ -11,6 +11,7 @@ description: Charts and stuff
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="vendor/bootstrap-sass/javascripts/bootstrap.js"></script>
 <script src="vendor/slick-carousel/slick.js"></script>
+<script src="vendor/mathjs/math.min.js"></script>
 <script src="js/data.js"></script>
 <script src="js/headerShrink.js"></script>
 <script src="js/milestonesCarousel.js"></script>
@@ -136,6 +137,19 @@ description: Charts and stuff
 	</div>
 </div>
 
+<div id="feedings" class="container-fluid section">
+	<div class="row">
+		<div class="col-xs-12">
+			<h2>Feeding Frequency</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="feedingsChart" class="google-chart"></div>
+		</div>
+	</div>
+</div>
+
 
 <div id="growth" class="container-fluid section">
 	<div class="row">
@@ -217,8 +231,13 @@ function drawCharts() {
 	napsChart.draw(napsData, {
 		seriesType: 'bars',
 		series: {1: {type: 'line', targetAxisIndex: 1}},
-		vAxis: {
-			title: 'Hours'
+		vAxes: {
+			0: {
+				title: 'Hours'
+			},
+			1: {
+				format: 'short'
+			}
 		}
 	});
 
@@ -231,6 +250,20 @@ function drawCharts() {
 	sleepChart.draw(sleepData, {
 		vAxis: {
 			title: 'Hours'
+		}
+	});
+
+	var feedingsChart = new google.visualization.ComboChart(document.getElementById('feedingsChart'));
+	feedingsChart.draw(feeds.medianTimeBetweenFeedings(), {
+		seriesType: 'bars',
+		series: {1: {type: 'line', targetAxisIndex: 1}},
+		vAxes: {
+			0: {
+				title: 'Hours'
+			},
+			1: {
+				format: 'short'
+			}
 		}
 	});
 
