@@ -166,7 +166,7 @@ class Feeds extends Data {
 			feedings = _.sortBy(feedings, "start");
 			let durationsBetween = [];
 			for (let i=0; i < feedings.length - 1; i++) {
-				let duration = feedings[i+1].start.valueOf() - feedings[i].end.valueOf();
+				let duration = feedings[i+1].start.valueOf() - feedings[i].start.valueOf();
 				durationsBetween.push(duration / 1000 / 60 / 60); // In hours
 			}
 			dataTable.addRow([new Date(day), math.round(math.median(durationsBetween), 1), feedings.length]);
