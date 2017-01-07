@@ -116,17 +116,6 @@ description: Charts and stuff
 
 	<div class="row">
 		<div class="col-xs-12">
-			<h2>Day Naps</h2>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-xs-12">
-			<div id="napsChart" class="google-chart"></div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-xs-12">
 			<h2>Total Sleep</h2>
 		</div>
 	</div>
@@ -222,27 +211,6 @@ function drawCharts() {
 		isStacked: true,
 		vAxis: {
 			title: 'Hours'
-		}
-	});
-
-	var napsData = sleeps.dataView(['day', 'type', 'durationHour']);
-	napsData.setRows(napsData.getFilteredRows([{column: 1, value: 'Nap'}]));
-	napsData = google.visualization.data.group(napsData.toDataTable(), [0], [
-		{column: 2, label: 'Duration', aggregation: google.visualization.data.sum, type: 'number'},
-		{column: 2, label: 'Count', aggregation: google.visualization.data.count, type: 'number'}
-	]);
-
-	var napsChart = new google.visualization.ComboChart(document.getElementById('napsChart'));
-	napsChart.draw(napsData, {
-		seriesType: 'bars',
-		series: {1: {type: 'line', targetAxisIndex: 1}},
-		vAxes: {
-			0: {
-				title: 'Hours'
-			},
-			1: {
-				format: 'short'
-			}
 		}
 	});
 
