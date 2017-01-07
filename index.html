@@ -154,12 +154,12 @@ description: Charts and stuff
 <div id="growth" class="container-fluid section">
 	<div class="row">
 		<div class="col-xs-12">
-			<h2>Growth</h2>
+			<h2>Weight compared to 25th and 75th percentiles</h2>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
-			<div id="growthChart" class="google-chart"></div>
+			<div id="weightChart" class="google-chart"></div>
 		</div>
 	</div>
 </div>
@@ -178,6 +178,11 @@ var feeds = new Feeds({{ site.data.feeds | jsonify }});
 var excretions = new Excretions({{ site.data.excretions | jsonify }});
 var journals = new Journals({{ site.data.journal_entries | jsonify }});
 var growths = new Growths({{ site.data.growths | jsonify }});
+{% if site.data.baby.gender == 'female' %}
+var weightPercentiles = new GrowthPercentiles({{ site.data.who_growth_percentiles_girls | jsonify }});
+{% else %}
+var weightPercentiles = new GrowthPercentiles({{ site.data.who_growth_percentiles_boys | jsonify }});
+{% endif %}
 
 $("#ageKPI").html(metadata.ageInWeeks);
 $("#sleepHoursKPI").html(Math.round(sleeps.totalHours));
@@ -267,21 +272,18 @@ function drawCharts() {
 		}
 	});
 
-	var growthChart = new google.visualization.LineChart(document.getElementById('growthChart'));
-	var growthsDataView = growths.dataView(['day', 'weight', 'height', 'head']);
-	var growthChartOptions = {
+	var weightChart = new google.visualization.LineChart(document.getElementById('weightChart'));
+	var weightChartData = growths.weightWithPercentiles(weightPercentiles, metadata);
+	var weightChartOptions = {
 		curveType: 'function',
 		interpolateNulls: true,
-		series: {
-			1: { targetAxisIndex:1 },
-			2: { targetAxisIndex:1 }
-		},
-		vAxes: {
-			0: { title: growths.weightUnit()},
-			1: { title: growths.lengthUnit()}
-		}
+ 		lineWidth: 4,
+        intervals: { 'style':'area' },
+        vAxis: {
+			title: 'kg'
+        }
 	};
-	growthChart.draw(growthsDataView, growthChartOptions);
+	weightChart.draw(weightChartData, weightChartOptions);
 }
 
 $(window).resize(drawCharts);

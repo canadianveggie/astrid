@@ -166,7 +166,7 @@ class Feeds extends Data {
 			feedings = _.sortBy(feedings, "start");
 			let durationsBetween = [];
 			for (let i=0; i < feedings.length - 1; i++) {
-				let duration = feedings[i+1].start.valueOf() - feedings[i].end.valueOf();
+				let duration = feedings[i+1].start.valueOf() - feedings[i].start.valueOf();
 				durationsBetween.push(duration / 1000 / 60 / 60); // In hours
 			}
 			dataTable.addRow([new Date(day), math.round(math.median(durationsBetween), 1), feedings.length]);
@@ -226,6 +226,28 @@ class Growths extends Data {
 		var latestWeight = sortedByDate[sortedByDate.length - 1].weight;
 		var earliestWeight = sortedByDate[0].weight;
 		return latestWeight / earliestWeight;
+	}
+
+	weightWithPercentiles(percentilesByAge, metadata) {
+		var dataTable = new google.visualization.DataTable();
+		dataTable.addColumn({id: 'day', label: 'Day', type: 'date'});
+		dataTable.addColumn({id: 'weight', label: 'Weight', type: 'number'});
+		dataTable.addColumn({id: 'p25', label: '25th Percentile', type: 'number', role: 'interval'});
+		dataTable.addColumn({id: 'p75', label: '75th Percentile', type: 'number', role: 'interval'});
+
+		_.each(this.data, function (growth) {
+			if (growth.weight) {
+				let age = metadata.ageOnDate(growth.day);
+				let row = [growth.day,
+					growth.weight / 1000,
+					percentilesByAge.percentileAtAge(age, 25),
+					percentilesByAge.percentileAtAge(age, 75)
+				];
+				dataTable.addRow(row);
+			}
+		});
+
+		return dataTable;
 	}
 }
 
@@ -405,11 +427,27 @@ class Metadata {
 		return new Date(this.data.birthdate);
 	}
 
+	ageOnDate (date) {
+		return (date - this.birthdate) / 24/60/60/1000;
+	}
+
 	get ageInDays () {
-		return (new Date() - this.birthdate) / 24/60/60/1000;
+		return this.ageOnDate(new Date());
 	}
 
 	get ageInWeeks () {
 		return math.round(this.ageInDays / 7, 1);
+	}
+}
+
+class GrowthPercentiles {
+	constructor (data) {
+		// Age,L,M,S,P01,P1,P3,P5,P10,P15,P25,P50,P75,P85,P90,P95,P97,P99,P999
+		// Indexed by age
+		this.data=data;
+	}
+
+	percentileAtAge (ageInDays, percentile) {
+		return parseFloat(this.data[Math.floor(ageInDays)]['P' + percentile]);
 	}
 }
