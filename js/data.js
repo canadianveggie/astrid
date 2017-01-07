@@ -118,27 +118,42 @@ class Feeds extends Data {
 				let endTime = columnData[2].v;
 				return new Date((startTime.getTime() + endTime.getTime()) / 2)
 			}, type: 'datetime'},
-			{id: 'time', label: 'Time', derivativeFn: function (columnData, rawRow) {
-				let startTime = columnData[1].v;
-				let endTime = columnData[2].v;
-				return new Date((startTime.getTime() + endTime.getTime()) / 2)
-			}, type: 'datetime'},
 			{id: 'day', label: 'Day', derivativeFn: function (columnData, rawRow) {
-				let time = columnData[4].v;
+				let time = columnData[3].v;
 				return new Date(time.getFullYear(), time.getMonth(), time.getDate());
 			}, type: 'date'},
 			{id: 'type', label: 'Feed Type', orginalLabel: ' Feed Type', type: 'string'},
-			{id: 'Quantity', label: 'Quantity', orginalLabel: ' Quantity (oz)', type: 'number'},
+			{id: 'quantity', label: 'Quantity', orginalLabel: ' Quantity (oz)', type: 'number'},
 			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
 			{id: 'duration', label: 'Duration', orginalLabel: ' Duration (Minutes)', type: 'number'},
-			{id: 'type', label: 'Food Type', orginalLabel: ' Food Type', type: 'string'},
+			{id: 'foodType', label: 'Food Type', orginalLabel: ' Food Type', type: 'string'},
 			{id: 'unit', label: 'unit', orginalLabel: ' Unit', type: 'string'},
 			{id: 'bottleType', label: 'Bottle Type', orginalLabel: ' Bottle Type', type: 'string'}
 		]);
 	}
 
-	get feedingsByDay () {
-		return _.groupBy(this.data, 'day', this);
+	// Feeding sessions group two or more feedings that happen within 15 minutes of each other
+	// Used to group feedings on the left/right breast together into one feeding session
+	get sessions () {
+		let fifteenMinutes = 15 * 60 * 1000;
+		let sessions = [];
+		_.each(this.data, function (feeding) {
+			if (sessions.length) {
+				let lastSession = _.last(sessions);
+				let timeBetween = Math.max(feeding.start.valueOf() - lastSession.end.valueOf(), lastSession.start.valueOf() - feeding.end.valueOf());
+				if (timeBetween < fifteenMinutes) {
+					// Replace the last feeding
+					sessions.pop();
+					feeding = combineFeedings(lastSession, feeding);
+				}
+			}
+			sessions.push(feeding);
+		});
+		return sessions;
+	}
+
+	get sessionsByDay () {
+		return _.groupBy(this.sessions, 'day', this);
 	}
 
 	medianTimeBetweenFeedings () {
@@ -147,7 +162,7 @@ class Feeds extends Data {
 		dataTable.addColumn({id: 'median', label: 'Median Time Between Feedings', type: 'number'});
 		dataTable.addColumn({id: 'feedingsPerDay', label: 'Feedings Per Day', type: 'number'});
 
-		_.each(this.feedingsByDay, function (feedings, day) {
+		_.each(this.sessionsByDay, function (feedings, day) {
 			feedings = _.sortBy(feedings, "start");
 			let durationsBetween = [];
 			for (let i=0; i < feedings.length - 1; i++) {
@@ -159,6 +174,23 @@ class Feeds extends Data {
 
 		return dataTable;
 	}
+}
+
+function combineFeedings(feedingA, feedingB) {
+	let combined = _.extend({}, feedingA, feedingB);
+	combined.id = 'session' + feedingA.id + ':' + feedingB.id;
+	combined.start = new Date(Math.min(feedingA.start, feedingB.start));
+	combined.end = new Date(Math.max(feedingA.end, feedingB.end));
+	combined.time = new Date((combined.start.getTime() + combined.end.getTime()) / 2);
+	combined.day = new Date(combined.time.getFullYear(), combined.time.getMonth(), combined.time.getDate());
+	if (feedingA.type !== feedingB.type) {
+		combined.type = 'session';
+	}
+	combined.quantity = feedingA.quantity + feedingB.quantity;
+	combined.note = !feedingA.note ? feedingB.note : (!feedingB.note ? feedingA.note : feedingA.note + ' ' + feedingB.note);
+	combined.duration = feedingA.duration + feedingB.duration;
+
+	return combined;
 }
 
 class Growths extends Data {
