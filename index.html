@@ -139,6 +139,18 @@ description: Charts and stuff
 	</div>
 </div>
 
+<div id="diapers" class="container-fluid section">
+	<div class="row">
+		<div class="col-xs-12">
+			<h2>Diapers</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="diapersChart" class="google-chart"></div>
+		</div>
+	</div>
+</div>
 
 <div id="growth" class="container-fluid section">
 	<div class="row">
@@ -238,6 +250,12 @@ function drawCharts() {
 				format: 'short'
 			}
 		}
+	});
+
+	var diapersChart = new google.visualization.SteppedAreaChart(document.getElementById('diapersChart'));
+	diapersChart.draw(excretions.diapersPerDay(), {
+		isStacked: true,
+		colors: ['#FFFF00', '#663300']
 	});
 
 	var weightChart = new google.visualization.LineChart(document.getElementById('weightChart'));

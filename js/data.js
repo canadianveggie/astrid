@@ -93,9 +93,38 @@ class Excretions extends Data {
 				let time = columnData[1].v;
 				return time;
 			}, type: 'datetime'},
+			{id: 'day', label: 'Day', derivativeFn: function (columnData, rawRow) {
+				let time = columnData[1].v;
+				return new Date(time.getFullYear(), time.getMonth(), time.getDate());
+			}, type: 'date'},
 			{id: 'type', label: 'Type', orginalLabel: ' Type', type: 'string'},
 			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'}
 		]);
+	}
+
+	get diapersByDay () {
+		return _.groupBy(this.data, 'day', this);
+	}
+
+	diapersPerDay () {
+		var dataTable = new google.visualization.DataTable();
+		dataTable.addColumn({id: 'day', label: 'Day', type: 'date'});
+		dataTable.addColumn({id: 'pees', label: 'Pees', type: 'number'});
+		dataTable.addColumn({id: 'poos', label: 'Poos', type: 'number'});
+
+		_.each(this.diapersByDay, function (diapers, day) {
+			let pees = 0, poos = 0;
+			_.each(diapers, function (diaper) {
+				if (diaper.type === 'Pee') {
+					pees++;
+				} else if (diaper.type === 'Pee and Poo' || diaper.type === 'Poo') {
+					poos++;
+				}
+			});
+			dataTable.addRow([new Date(day),pees, poos]);
+		});
+
+		return dataTable;
 	}
 }
 
