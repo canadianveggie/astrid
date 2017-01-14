@@ -198,7 +198,9 @@ class Feeds extends Data {
 				let duration = feedings[i+1].start.valueOf() - feedings[i].start.valueOf();
 				durationsBetween.push(duration / 1000 / 60 / 60); // In hours
 			}
-			dataTable.addRow([new Date(day), math.round(math.median(durationsBetween), 1), feedings.length]);
+			if (durationsBetween.length) {
+				dataTable.addRow([new Date(day), math.round(math.median(durationsBetween), 1), feedings.length]);
+			}
 		});
 
 		return dataTable;
