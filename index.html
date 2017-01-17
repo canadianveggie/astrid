@@ -13,6 +13,7 @@ description: Charts and stuff
 <script src="vendor/slick-carousel/slick.js"></script>
 <script src="vendor/mathjs/math.min.js"></script>
 <script src="js/data.js"></script>
+<script src="js/charts.js"></script>
 <script src="js/headerShrink.js"></script>
 <script src="js/milestonesCarousel.js"></script>
 
@@ -171,7 +172,7 @@ description: Charts and stuff
 
 <script type="text/javascript">
 google.charts.load('current', {packages: ['corechart', 'timeline']});
-google.charts.setOnLoadCallback(drawCharts);
+google.charts.setOnLoadCallback(createCharts);
 
 var metadata = new Metadata({{ site.data.baby | jsonify }});
 var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
@@ -207,69 +208,23 @@ function init() {
 
 window.onload = init();
 
+var charts = [];
+
+function createCharts() {
+	charts.push(new TimelineChart(document.getElementById('timeline'), sleeps, feeds, excretions, journals));
+	charts.push(new NightSleepChart(document.getElementById('nightSleepChart'), sleeps));
+	charts.push(new SleepChart(document.getElementById('sleepChart'), sleeps));
+	charts.push(new FeedingsChart(document.getElementById('feedingsChart'), feeds));
+	charts.push(new DiapersChart(document.getElementById('diapersChart'), excretions));
+	charts.push(new WeightChart(document.getElementById('weightChart'), growths));
+
+	drawCharts();
+}
+
 function drawCharts() {
-	var lastDataDate = new Date(_.max([sleeps.largest('end', feeds.largest('end'))]));
-	var timelineStart = new Date(lastDataDate.valueOf());
-	timelineStart.setDate(lastDataDate.getDate() - 7); // 7 days before last event
-	var timelineData = new TimelineData({Sleep: sleeps, Feeds:feeds, Diapers:excretions, Journal:journals}, timelineStart);
-
-	var timeline = new google.visualization.Timeline(document.getElementById('timeline'));
-	timeline.draw(timelineData.dataTable, {timeline: {showBarLabels:false}});
-
-	var nightSleepChart = new google.visualization.SteppedAreaChart(document.getElementById('nightSleepChart'));
-
-	var longestSleepsDataTable = sleeps.longestDurationsDataTable('Night');
-	nightSleepChart.draw(longestSleepsDataTable, {
-		isStacked: true,
-		vAxis: {
-			title: 'Hours'
-		}
+	_.each(charts, function (chart) {
+		chart.draw();
 	});
-
-	var sleepData = sleeps.dataView(['day', 'durationHour']);
-	sleepData = google.visualization.data.group(sleepData.toDataTable(), [0], [
-		{column: 1, label: 'Duration', aggregation: google.visualization.data.sum, type: 'number'}
-	]);
-
-	var sleepChart = new google.visualization.ColumnChart(document.getElementById('sleepChart'));
-	sleepChart.draw(sleepData, {
-		vAxis: {
-			title: 'Hours'
-		}
-	});
-
-	var feedingsChart = new google.visualization.ComboChart(document.getElementById('feedingsChart'));
-	feedingsChart.draw(feeds.medianTimeBetweenFeedings(), {
-		seriesType: 'bars',
-		series: {1: {type: 'line', targetAxisIndex: 1}},
-		vAxes: {
-			0: {
-				title: 'Hours'
-			},
-			1: {
-				format: 'short'
-			}
-		}
-	});
-
-	var diapersChart = new google.visualization.SteppedAreaChart(document.getElementById('diapersChart'));
-	diapersChart.draw(excretions.diapersPerDay(), {
-		isStacked: true,
-		colors: ['#FFFF00', '#663300']
-	});
-
-	var weightChart = new google.visualization.LineChart(document.getElementById('weightChart'));
-	var weightChartData = growths.weightWithPercentiles(weightPercentiles, metadata);
-	var weightChartOptions = {
-		curveType: 'function',
-		interpolateNulls: true,
- 		lineWidth: 4,
-        intervals: { 'style':'area' },
-        vAxis: {
-			title: 'kg'
-        }
-	};
-	weightChart.draw(weightChartData, weightChartOptions);
 }
 
 $(window).resize(drawCharts);
