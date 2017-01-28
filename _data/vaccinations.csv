@@ -6,7 +6,8 @@ id, Time, Vaccine Name, Status, Completed, Notes
 10,11:45:00 11-23-2016,DTaP-HB-Hib-IPV,Vaccinated,1,Diphtheria and tetanus toxoid with acellular pertussis  Hepatitis B  Hib and IPV 
 11,11:45:00 11-23-2016,Pneumo Conj,Vaccinated,1,Pneumococcal conjugate
 24,11:45:30 11-23-2016,Rotavirus,Vaccinated,1,
-15,10:00:00 01-23-2017,DTaP-HB-Hib-IPV,Upcoming,0,Diphtheria and tetanus toxoid with acellular pertussis  Hep B  Hib and IPV
+15,10:00:00 01-23-2017,DTaP-HB-Hib-IPV,Vaccinated,1,Diphtheria and tetanus toxoid with acellular pertussis  Hep B  Hib and IPV
+29,11:01:40 01-23-2017,Influenza,Vaccinated,1,
 12,11:35:00 06-29-2017,MenC Conj,Upcoming,0,Meningococcal C conjugate
 17,11:35:00 06-29-2017,MMR,Upcoming,0,Measles mumps and rubella
 18,11:35:00 06-29-2017,Pneumo Conj,Upcoming,0,Pneumococcal conjugate
