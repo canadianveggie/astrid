@@ -239,12 +239,14 @@ class Growths extends Data {
 		]);
 	}
 
-	weightUnit () {
-		return this.data.length && this.data[0].weightUnit;
-	}
-
-	lengthUnit () {
-		return this.data.length && this.data[0].lengthUnit;
+	convertToKg(weight, unit) {
+		if (unit === 'g') {
+			return weight / 1000;
+		} else if (unit === 'oz') {
+			return weight / 35.274;
+		} else {
+			throw new Error('Unsupported unit ' + unit);
+		}
 	}
 
 	get weightChange () {
@@ -254,8 +256,8 @@ class Growths extends Data {
 		var sortedByDate = _.chain(this.data).filter(function (growth) {
 			return growth.weight > 0;
 		}).sortBy("day").value();
-		var latestWeight = sortedByDate[sortedByDate.length - 1].weight;
-		var earliestWeight = sortedByDate[0].weight;
+		var latestWeight = this.convertToKg(_.last(sortedByDate).weight, _.last(sortedByDate).weightUnit);
+		var earliestWeight = this.convertToKg(_.first(sortedByDate).weight, _.first(sortedByDate).weightUnit);
 		return latestWeight / earliestWeight;
 	}
 
@@ -270,13 +272,13 @@ class Growths extends Data {
 			if (growth.weight) {
 				let age = metadata.ageOnDate(growth.day);
 				let row = [growth.day,
-					growth.weight / 1000,
+					this.convertToKg(growth.weight, growth.weightUnit),
 					percentilesByAge.percentileAtAge(age, 25),
 					percentilesByAge.percentileAtAge(age, 75)
 				];
 				dataTable.addRow(row);
 			}
-		});
+		}, this);
 
 		return dataTable;
 	}
