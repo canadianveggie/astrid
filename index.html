@@ -196,7 +196,7 @@ $("#growthKPI").html(growths.weightChange.toFixed(1) + "x");
 var milestones = {{ site.data.milestones | jsonify }};
 var milestonesCarousel;
 if (milestones && milestones.length) {
-	milestonesCarousel = new MilestonesCarousel(milestones, $("#milestones"));
+	milestonesCarousel = new MilestonesCarousel(milestones, $("#milestones"), metadata);
 }
 
 function init() {

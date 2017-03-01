@@ -451,17 +451,33 @@ class TimelineData {
 class Metadata {
 	constructor (data) {
 		this.data = data;
+		if (!this.data.birthdate) {
+			this.birthdate = new Date();
+		} else {
+			this.birthdate = new Date(this.data.birthdate);
+		}
 	}
 
-	get birthdate () {
-		if (!this.data.birthdate) {
-			return new Date();
-		}
-		return new Date(this.data.birthdate);
+	birthdate () {
+		return this.birthdate;
 	}
 
 	ageOnDate (date) {
 		return (date - this.birthdate) / 24/60/60/1000;
+	}
+
+	ageOnDateFormatted (date) {
+		let days = this.ageOnDate(date);
+		if (days < 1) {
+			return math.round(days * 24, 0) + " hours";
+		}
+		else if (days < 1.5) {
+			return "1 day";
+		}
+		else if (days < 28) {
+			return math.round(days, 0) + " days";
+		}
+		return math.round(days / 7, 0) + " weeks";
 	}
 
 	get ageInDays () {
@@ -481,6 +497,10 @@ class GrowthPercentiles {
 	}
 
 	percentileAtAge (ageInDays, percentile) {
-		return parseFloat(this.data[Math.floor(ageInDays)]['P' + percentile]);
+		ageInDays = Math.round(ageInDays);
+		if (ageInDays < 0 || ageInDays >= this.data.length) {
+			return NaN;
+		}
+		return parseFloat(this.data[ageInDays]['P' + percentile]);
 	}
 }

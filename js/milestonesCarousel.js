@@ -1,17 +1,19 @@
 class MilestonesCarousel {
-	constructor (milestones, $milestones) {
+	constructor (milestones, $milestones, metadata) {
 		this.milestones = _.chain(milestones).sortBy('date').reverse().value();
 		this.$milestones = $milestones;
+		this.metadata = metadata;
 	}
 
 	draw () {
 		_.forEach(this.milestones, function(milestone) {
+			let date = new Date(milestone.date);
 			$('<div>')
 				.addClass('milestone')
 				.append($('<h4>')
 					.html(milestone.title)
 				).append($('<h4>')
-					.html(milestone.date)
+					.html(date.toLocaleDateString(navigator.language, {year: 'numeric', month: 'long', day: 'numeric' }) + " (" + this.metadata.ageOnDateFormatted(date) + ")")
 				).append($('<img>')
 					.prop('src', milestone.photo)
 					.addClass('img-responsive')
