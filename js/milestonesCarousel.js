@@ -1,6 +1,6 @@
 class MilestonesCarousel {
 	constructor (milestones, $milestones) {
-		this.milestones = milestones;
+		this.milestones = _.chain(milestones).sortBy('date').reverse().value();
 		this.$milestones = $milestones;
 	}
 
