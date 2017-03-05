@@ -1,2 +1,3 @@
 id, Medicine Name, Color Code, Default Quantity, Default Measurement Type, Image Name
 2,Ventolin,#41CAA1,200,METRIC,BOTTLE_BLACK_1
+3,Hydrocortisone,#f27737,0,METRIC,CREAM_RED
