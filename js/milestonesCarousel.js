@@ -7,13 +7,13 @@ class MilestonesCarousel {
 
 	draw () {
 		_.forEach(this.milestones, function(milestone) {
-			let date = new Date(milestone.date);
+			let date = moment(milestone.date);
 			$('<div>')
 				.addClass('milestone')
 				.append($('<h4>')
 					.html(milestone.title)
 				).append($('<h4>')
-					.html(date.toLocaleDateString(navigator.language, {year: 'numeric', month: 'long', day: 'numeric' }) + " (" + this.metadata.ageOnDateFormatted(date) + ")")
+					.html(date.format('D MMMM YYYY') + " (" + this.metadata.ageOnDateFormatted(date) + ")")
 				).append($('<img>')
 					.prop('src', milestone.photo)
 					.addClass('img-responsive')
