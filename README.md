@@ -21,7 +21,8 @@ If you want to run ASTRID locally, you will need [node.js](https://nodejs.org/) 
 The Gemfile contains local Jekyll dependencies. Use bundle to install them.
 
 ```
-bundle install
+gem install bundle
+bundle update && bundle install
 ```
 
 The package.json file includes developer tools (like grunt). Use npm to install them.
