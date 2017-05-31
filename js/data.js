@@ -5,15 +5,22 @@ class Data {
 		this.rows = [];
 
 		_.each(dataAsJson, function (datum) {
+
+			// Trim property names in datum
+			var trimDatum = {};
+			_.each(datum, function (value, key) {
+				trimDatum[key.trim()] = value;
+			});
+
 			var columnData = [];
 			var cleansedDatum = {};
 			_.each(columns, function (column) {
 				let value;
 				if (column.derivativeFn) {
 					// Pass columnData for previously defined columns and raw row
-					value = column.derivativeFn(columnData, datum);
+					value = column.derivativeFn(columnData, trimDatum);
 				} else {
-					value = datum[column.orginalLabel];
+					value = trimDatum[column.originalLabel || column.label];
 					if (value) {
 						if (column.type === 'boolean') {
 							value = value > 0;
@@ -83,8 +90,8 @@ class Excretions extends Data {
 		const diaperChangeDuration = 3 * 60 * 1000; // 3 minutes
 		// id, Time, Type, Notes
 		super(data, [
-			{id: 'id', label: 'id', orginalLabel: 'id', type: 'number'},
-			{id: 'time', label: 'Time', orginalLabel: ' Time', type: 'datetime'},
+			{id: 'id', label: 'id', type: 'number'},
+			{id: 'time', label: 'Time', type: 'datetime'},
 			{id: 'start', label: 'Start Time', derivativeFn: function (columnData, rawRow) {
 				let time = columnData[1].v;
 				return new Date(time.getTime() - diaperChangeDuration);
@@ -97,8 +104,8 @@ class Excretions extends Data {
 				let time = columnData[1].v;
 				return new Date(time.getFullYear(), time.getMonth(), time.getDate());
 			}, type: 'date'},
-			{id: 'type', label: 'Type', orginalLabel: ' Type', type: 'string'},
-			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'}
+			{id: 'type', label: 'Type', type: 'string'},
+			{id: 'note', label: 'Note', type: 'string'}
 		]);
 	}
 
@@ -131,15 +138,15 @@ class Excretions extends Data {
 class Feeds extends Data {
 	constructor (data) {
 		super(data, [
-			{id: 'id', label: 'id', orginalLabel: 'id', type: 'number'},
-			{id: 'start', label: 'Start Time', orginalLabel: ' Start Time', type: 'datetime'},
+			{id: 'id', label: 'id', type: 'number'},
+			{id: 'start', label: 'Start Time', type: 'datetime'},
 			{id: 'end', label: 'End Time', derivativeFn: function (columnData, rawRow) {
 				let startTime = columnData[1].v;
-				let endTime = rawRow[' End Time'];
+				let endTime = rawRow['End Time'];
 				if (endTime) {
 					return new Date(endTime);
 				} else {
-					return new Date(startTime.getTime() + rawRow[" Duration (Minutes)"] * 60 * 1000);
+					return new Date(startTime.getTime() + rawRow['Duration (Minutes)'] * 60 * 1000);
 				}
 			}, type: 'datetime'},
 			{id: 'time', label: 'Time', derivativeFn: function (columnData, rawRow) {
@@ -151,13 +158,13 @@ class Feeds extends Data {
 				let time = columnData[3].v;
 				return new Date(time.getFullYear(), time.getMonth(), time.getDate());
 			}, type: 'date'},
-			{id: 'type', label: 'Feed Type', orginalLabel: ' Feed Type', type: 'string'},
-			{id: 'quantity', label: 'Quantity', orginalLabel: ' Quantity (oz)', type: 'number'},
-			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
-			{id: 'duration', label: 'Duration', orginalLabel: ' Duration (Minutes)', type: 'number'},
-			{id: 'foodType', label: 'Food Type', orginalLabel: ' Food Type', type: 'string'},
-			{id: 'unit', label: 'unit', orginalLabel: ' Unit', type: 'string'},
-			{id: 'bottleType', label: 'Bottle Type', orginalLabel: ' Bottle Type', type: 'string'}
+			{id: 'type', label: 'Feed Type', type: 'string'},
+			{id: 'quantity', label: 'Quantity', originalLabel: 'Quantity (oz)', type: 'number'},
+			{id: 'note', label: 'Note', type: 'string'},
+			{id: 'duration', label: 'Duration', originalLabel: 'Duration (Minutes)', type: 'number'},
+			{id: 'foodType', label: 'Food Type', type: 'string'},
+			{id: 'unit', label: 'unit', type: 'string'},
+			{id: 'bottleType', label: 'Bottle Type', type: 'string'}
 		]);
 	}
 
@@ -192,7 +199,7 @@ class Feeds extends Data {
 		dataTable.addColumn({id: 'feedingsPerDay', label: 'Feedings Per Day', type: 'number'});
 
 		_.each(this.sessionsByDay, function (feedings, day) {
-			feedings = _.sortBy(feedings, "start");
+			feedings = _.sortBy(feedings, 'start');
 			let durationsBetween = [];
 			for (let i=0; i < feedings.length - 1; i++) {
 				let duration = feedings[i+1].start.valueOf() - feedings[i].start.valueOf();
@@ -228,14 +235,14 @@ class Growths extends Data {
 	constructor (data) {
 		// id, Day, Weight, Weight Unit, Height, Head, Length Unit, Notes
 		super(data, [
-			{id: 'id', label: 'id', orginalLabel: 'id', type: 'number'},
-			{id: 'day', label: 'Day', orginalLabel: ' Day', type: 'date'},
-			{id: 'weight', label: 'Weight', orginalLabel: ' Weight', type: 'number'},
-			{id: 'weightUnit', label: 'Weight Unit', orginalLabel: ' Weight Unit', type: 'string'},
-			{id: 'height', label: 'Height', orginalLabel: ' Height', type: 'number'},
-			{id: 'head', label: 'Head', orginalLabel: ' Head', type: 'number'},
-			{id: 'lengthUnit', label: 'Length Unit', orginalLabel: ' Length Unit', type: 'string'},
-			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'}
+			{id: 'id', label: 'id', type: 'number'},
+			{id: 'day', label: 'Day', type: 'date'},
+			{id: 'weight', label: 'Weight', type: 'number'},
+			{id: 'weightUnit', label: 'Weight Unit', type: 'string'},
+			{id: 'height', label: 'Height', type: 'number'},
+			{id: 'head', label: 'Head', type: 'number'},
+			{id: 'lengthUnit', label: 'Length Unit', type: 'string'},
+			{id: 'note', label: 'Note', type: 'string'}
 		]);
 	}
 
@@ -255,7 +262,7 @@ class Growths extends Data {
 		}
 		var sortedByDate = _.chain(this.data).filter(function (growth) {
 			return growth.weight > 0;
-		}).sortBy("day").value();
+		}).sortBy('day').value();
 		var latestWeight = this.convertToKg(_.last(sortedByDate).weight, _.last(sortedByDate).weightUnit);
 		var earliestWeight = this.convertToKg(_.first(sortedByDate).weight, _.first(sortedByDate).weightUnit);
 		return latestWeight / earliestWeight;
@@ -290,15 +297,15 @@ class Sleeps extends Data {
 		dayNightStartHour = dayNightStartHour || 18;
 		dayNightEndHour = dayNightEndHour || 6;
 		super(data, [
-			{id: 'id', label: 'id', orginalLabel: 'id', type: 'number'},
-			{id: 'start', label: 'Start Time', orginalLabel: ' Start Time', type: 'datetime'},
+			{id: 'id', label: 'id', type: 'number'},
+			{id: 'start', label: 'Start Time', type: 'datetime'},
 			{id: 'end', label: 'End Time', derivativeFn: function (columnData, rawRow) {
 				let startTime = columnData[1].v;
-				let endTime = rawRow[' End Time'];
+				let endTime = rawRow['End Time'];
 				if (endTime) {
 					return new Date(endTime);
 				} else {
-					return new Date(startTime.getTime() + rawRow[" Approximate Duration (Minutes)"] * 60 * 1000);
+					return new Date(startTime.getTime() + rawRow['Approximate Duration (Minutes)'] * 60 * 1000);
 				}
 			}, type: 'datetime'},
 			{id: 'time', label: 'Time', derivativeFn: function (columnData, rawRow) {
@@ -306,8 +313,8 @@ class Sleeps extends Data {
 				let endTime = columnData[2].v;
 				return new Date((startTime.getTime() + endTime.getTime()) / 2)
 			}, type: 'datetime'},
-			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
-			{id: 'duration', label: 'Duration', orginalLabel: ' Approximate Duration (Minutes)', type: 'number'},
+			{id: 'note', label: 'Note', type: 'string'},
+			{id: 'duration', label: 'Duration', originalLabel: 'Approximate Duration (Minutes)', type: 'number'},
 			{id: 'type', label: 'Type', derivativeFn: function (columnData, rawRow) {
 				let time = columnData[1].v;
 				return time.getHours() >= dayNightStartHour|| time.getHours() < dayNightEndHour ? 'Night' : 'Nap';
@@ -327,7 +334,7 @@ class Sleeps extends Data {
 		// Returns duration of longest n sleeps plush remainder in an array
 		// Result is always an array of n+1 elements
 		function longestDurations (sleeps, n) {
-			let durations = _.pluck(sleeps, "durationHour").sort(function(a, b) {
+			let durations = _.pluck(sleeps, 'durationHour').sort(function(a, b) {
 				return b - a;
 			});
 			if (durations[0] < durations[1]) {
@@ -383,20 +390,20 @@ class Sleeps extends Data {
 	}
 
 	get sleepsByDay() {
-		return _.groupBy(this.data, "day", this);
+		return _.groupBy(this.data, 'day', this);
 	}
 }
 
 class Journals extends Data {
 	constructor (data) {
 		super(data, [
-			{id: 'id', label: 'id', orginalLabel: 'id', type: 'number'},
-			{id: 'start', label: 'Start Time', orginalLabel: ' Start Time', type: 'datetime'},
-			{id: 'end', label: 'End Time', orginalLabel: ' End Time', type: 'datetime'},
-			{id: 'category', label: 'Category', orginalLabel: ' Category', type: 'string'},
-			{id: 'type', label: 'Type', orginalLabel: ' Sub Category', type: 'string'},
-			{id: 'note', label: 'Note', orginalLabel: ' Notes', type: 'string'},
-			{id: 'timed', label: 'Timed', orginalLabel: ' Uses Timer', type: 'boolean'}
+			{id: 'id', label: 'id', type: 'number'},
+			{id: 'start', label: 'Start Time', type: 'datetime'},
+			{id: 'end', label: 'End Time', type: 'datetime'},
+			{id: 'category', label: 'Category', type: 'string'},
+			{id: 'type', label: 'Type', originalLabel: 'Sub Category', type: 'string'},
+			{id: 'note', label: 'Note', type: 'string'},
+			{id: 'timed', label: 'Timed', originalLabel: 'Uses Timer', type: 'boolean'}
 		]);
 	}
 
@@ -469,15 +476,15 @@ class Metadata {
 	ageOnDateFormatted (date) {
 		let days = this.ageOnDate(date);
 		if (days < 1) {
-			return math.round(days * 24, 0) + " hours";
+			return math.round(days * 24, 0) + ' hours';
 		}
 		else if (days < 1.5) {
-			return "1 day";
+			return '1 day';
 		}
 		else if (days < 28) {
-			return math.round(days, 0) + " days";
+			return math.round(days, 0) + ' days';
 		}
-		return math.round(days / 7, 0) + " weeks";
+		return math.round(days / 7, 0) + ' weeks';
 	}
 
 	get ageInDays () {
