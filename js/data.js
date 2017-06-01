@@ -1,8 +1,9 @@
 class Data {
-	constructor (dataAsJson, columns) {
+	constructor (dataAsJson, columns, dateFormat) {
 		this.columns = columns;
 		this.data = [];
 		this.rows = [];
+		this.dateFormat = dateFormat;
 
 		_.each(dataAsJson, function (datum) {
 
@@ -18,7 +19,7 @@ class Data {
 				let value;
 				if (column.derivativeFn) {
 					// Pass columnData for previously defined columns and raw row
-					value = column.derivativeFn(columnData, trimDatum);
+					value = column.derivativeFn(cleansedDatum, trimDatum);
 				} else {
 					value = trimDatum[column.originalLabel || column.label];
 					if (value) {
@@ -31,12 +32,17 @@ class Data {
 								value = null;
 							}
 						} else if (column.type === 'date' || column.type === 'datetime') {
-							value = new Date(value);
+							value = moment(value, dateFormat);
 						}
 					}
 				}
 
-				columnData.push({v: value});
+				var googleValue = value;
+				if (column.type === 'date' || column.type === 'datetime') {
+					googleValue = value.toDate();
+				}
+
+				columnData.push({v: googleValue});
 				cleansedDatum[column.id] = value;
 			}, this);
 			this.data.push(cleansedDatum);
@@ -86,27 +92,24 @@ class Data {
 
 class Excretions extends Data {
 
-	constructor (data) {
-		const diaperChangeDuration = 3 * 60 * 1000; // 3 minutes
+	constructor (data, dateFormat) {
+		const diaperChangeDurationInMinutes = 3; // 3 minutes
 		// id, Time, Type, Notes
 		super(data, [
 			{id: 'id', label: 'id', type: 'number'},
 			{id: 'time', label: 'Time', type: 'datetime'},
-			{id: 'start', label: 'Start Time', derivativeFn: function (columnData, rawRow) {
-				let time = columnData[1].v;
-				return new Date(time.getTime() - diaperChangeDuration);
+			{id: 'start', label: 'Start Time', derivativeFn: function (cleansedData, rawRow) {
+				return cleansedData['time'].clone().subtract(diaperChangeDurationInMinutes, 'minutes');
 			}, type: 'datetime'},
-			{id: 'end', label: 'End Time', derivativeFn: function (columnData, rawRow) {
-				let time = columnData[1].v;
-				return time;
+			{id: 'end', label: 'End Time', derivativeFn: function (cleansedData, rawRow) {
+				return cleansedData['time'].clone();
 			}, type: 'datetime'},
-			{id: 'day', label: 'Day', derivativeFn: function (columnData, rawRow) {
-				let time = columnData[1].v;
-				return new Date(time.getFullYear(), time.getMonth(), time.getDate());
+			{id: 'day', label: 'Day', derivativeFn: function (cleansedData, rawRow) {
+				return cleansedData['time'].clone().startOf('day');
 			}, type: 'date'},
 			{id: 'type', label: 'Type', type: 'string'},
 			{id: 'note', label: 'Note', type: 'string'}
-		]);
+		], dateFormat);
 	}
 
 	get diapersByDay () {
@@ -136,27 +139,26 @@ class Excretions extends Data {
 }
 
 class Feeds extends Data {
-	constructor (data) {
+	constructor (data, dateFormat) {
 		super(data, [
 			{id: 'id', label: 'id', type: 'number'},
 			{id: 'start', label: 'Start Time', type: 'datetime'},
-			{id: 'end', label: 'End Time', derivativeFn: function (columnData, rawRow) {
-				let startTime = columnData[1].v;
+			{id: 'end', label: 'End Time', derivativeFn: function (cleansedData, rawRow) {
+				let startTime = cleansedData['start'];
 				let endTime = rawRow['End Time'];
 				if (endTime) {
-					return new Date(endTime);
+					return moment(endTime, dateFormat);
 				} else {
-					return new Date(startTime.getTime() + rawRow['Duration (Minutes)'] * 60 * 1000);
+					return startTime.clone().add(rawRow['Duration (Minutes)'], 'minutes');
 				}
 			}, type: 'datetime'},
-			{id: 'time', label: 'Time', derivativeFn: function (columnData, rawRow) {
-				let startTime = columnData[1].v;
-				let endTime = columnData[2].v;
-				return new Date((startTime.getTime() + endTime.getTime()) / 2)
+			{id: 'time', label: 'Time', derivativeFn: function (cleansedData, rawRow) {
+				let startTime = cleansedData['start'];
+				let endTime = cleansedData['end'];
+				return moment((startTime.valueOf() + endTime.valueOf()) / 2)
 			}, type: 'datetime'},
-			{id: 'day', label: 'Day', derivativeFn: function (columnData, rawRow) {
-				let time = columnData[3].v;
-				return new Date(time.getFullYear(), time.getMonth(), time.getDate());
+			{id: 'day', label: 'Day', derivativeFn: function (cleansedData, rawRow) {
+				return cleansedData['time'].clone().startOf('day');
 			}, type: 'date'},
 			{id: 'type', label: 'Feed Type', type: 'string'},
 			{id: 'quantity', label: 'Quantity', originalLabel: 'Quantity (oz)', type: 'number'},
@@ -165,7 +167,7 @@ class Feeds extends Data {
 			{id: 'foodType', label: 'Food Type', type: 'string'},
 			{id: 'unit', label: 'unit', type: 'string'},
 			{id: 'bottleType', label: 'Bottle Type', type: 'string'}
-		]);
+		], dateFormat);
 	}
 
 	// Feeding sessions group two or more feedings that happen within 15 minutes of each other
@@ -202,7 +204,7 @@ class Feeds extends Data {
 			feedings = _.sortBy(feedings, 'start');
 			let durationsBetween = [];
 			for (let i=0; i < feedings.length - 1; i++) {
-				let duration = feedings[i+1].start.valueOf() - feedings[i].start.valueOf();
+				let duration = feedings[i+1].start - feedings[i].start;
 				durationsBetween.push(duration / 1000 / 60 / 60); // In hours
 			}
 			if (durationsBetween.length) {
@@ -217,10 +219,10 @@ class Feeds extends Data {
 function combineFeedings(feedingA, feedingB) {
 	let combined = _.extend({}, feedingA, feedingB);
 	combined.id = 'session' + feedingA.id + ':' + feedingB.id;
-	combined.start = new Date(Math.min(feedingA.start, feedingB.start));
-	combined.end = new Date(Math.max(feedingA.end, feedingB.end));
-	combined.time = new Date((combined.start.getTime() + combined.end.getTime()) / 2);
-	combined.day = new Date(combined.time.getFullYear(), combined.time.getMonth(), combined.time.getDate());
+	combined.start = moment.min(feedingA.start, feedingB.start);
+	combined.end = moment.max(feedingA.end, feedingB.end);
+	combined.time = moment((combined.start.valueOf() + combined.end.valueOf()) / 2);
+	combined.day = combined.time.clone().startOf('day');
 	if (feedingA.type !== feedingB.type) {
 		combined.type = 'session';
 	}
@@ -232,7 +234,7 @@ function combineFeedings(feedingA, feedingB) {
 }
 
 class Growths extends Data {
-	constructor (data) {
+	constructor (data, dateFormat) {
 		// id, Day, Weight, Weight Unit, Height, Head, Length Unit, Notes
 		super(data, [
 			{id: 'id', label: 'id', type: 'number'},
@@ -243,7 +245,7 @@ class Growths extends Data {
 			{id: 'head', label: 'Head', type: 'number'},
 			{id: 'lengthUnit', label: 'Length Unit', type: 'string'},
 			{id: 'note', label: 'Note', type: 'string'}
-		]);
+		], dateFormat);
 	}
 
 	convertToKg(weight, unit) {
@@ -278,7 +280,7 @@ class Growths extends Data {
 		_.each(this.data, function (growth) {
 			if (growth.weight) {
 				let age = metadata.ageOnDate(growth.day);
-				let row = [growth.day,
+				let row = [growth.day.toDate(),
 					this.convertToKg(growth.weight, growth.weightUnit),
 					percentilesByAge.percentileAtAge(age, 25),
 					percentilesByAge.percentileAtAge(age, 75)
@@ -292,42 +294,42 @@ class Growths extends Data {
 }
 
 class Sleeps extends Data {
-	constructor (data, dayNightStartHour, dayNightEndHour) {
+	constructor (data, dateFormat, dayNightStartHour, dayNightEndHour) {
 		// Nighttime - 6pm to 7 am
 		dayNightStartHour = dayNightStartHour || 18;
 		dayNightEndHour = dayNightEndHour || 6;
 		super(data, [
 			{id: 'id', label: 'id', type: 'number'},
 			{id: 'start', label: 'Start Time', type: 'datetime'},
-			{id: 'end', label: 'End Time', derivativeFn: function (columnData, rawRow) {
-				let startTime = columnData[1].v;
+			{id: 'end', label: 'End Time', derivativeFn: function (cleansedData, rawRow) {
+				let startTime = cleansedData['start'];
 				let endTime = rawRow['End Time'];
 				if (endTime) {
-					return new Date(endTime);
+					return moment(endTime, dateFormat);
 				} else {
-					return new Date(startTime.getTime() + rawRow['Approximate Duration (Minutes)'] * 60 * 1000);
+					return startTime.clone().add(rawRow['Approximate Duration (Minutes)'], 'minutes');
 				}
 			}, type: 'datetime'},
-			{id: 'time', label: 'Time', derivativeFn: function (columnData, rawRow) {
-				let startTime = columnData[1].v;
-				let endTime = columnData[2].v;
-				return new Date((startTime.getTime() + endTime.getTime()) / 2)
+			{id: 'time', label: 'Time', derivativeFn: function (cleansedData, rawRow) {
+				let startTime = cleansedData['start'];
+				let endTime = cleansedData['end'];
+				return moment((startTime.valueOf() + endTime.valueOf()) / 2)
 			}, type: 'datetime'},
 			{id: 'note', label: 'Note', type: 'string'},
 			{id: 'duration', label: 'Duration', originalLabel: 'Approximate Duration (Minutes)', type: 'number'},
-			{id: 'type', label: 'Type', derivativeFn: function (columnData, rawRow) {
-				let time = columnData[1].v;
-				return time.getHours() >= dayNightStartHour|| time.getHours() < dayNightEndHour ? 'Night' : 'Nap';
+			{id: 'type', label: 'Type', derivativeFn: function (cleansedData, rawRow) {
+				let time = cleansedData['start'];
+				return time.hours() >= dayNightStartHour|| time.hours() < dayNightEndHour ? 'Night' : 'Nap';
 			}, type: 'string'},
-			{id: 'day', label: 'Day', derivativeFn: function (columnData, rawRow) {
-				let time = columnData[3].v;
-				let dayAdjustment = (time.getHours() < dayNightEndHour) ? -1 : 0;
-				return new Date(time.getFullYear(), time.getMonth(), time.getDate() + dayAdjustment);
+			{id: 'day', label: 'Day', derivativeFn: function (cleansedData, rawRow) {
+				let time = cleansedData['time'];
+				let dayAdjustment = (time.hours() < dayNightEndHour) ? -1 : 0;
+				return time.clone().startOf('day').add(dayAdjustment, 'days');
 			}, type: 'date'},
-			{id: 'durationHour', label: 'Duration', derivativeFn: function (columnData, rawRow) {
-				return math.round(columnData[5].v / 60, 1);
+			{id: 'durationHour', label: 'Duration', derivativeFn: function (cleansedData, rawRow) {
+				return math.round(cleansedData['duration'] / 60, 1);
 			}, type: 'number'}
-		]);
+		], dateFormat);
 	}
 
 	longestDurationsDataTable(type) {
@@ -395,7 +397,7 @@ class Sleeps extends Data {
 }
 
 class Journals extends Data {
-	constructor (data) {
+	constructor (data, dateFormat) {
 		super(data, [
 			{id: 'id', label: 'id', type: 'number'},
 			{id: 'start', label: 'Start Time', type: 'datetime'},
@@ -404,7 +406,7 @@ class Journals extends Data {
 			{id: 'type', label: 'Type', originalLabel: 'Sub Category', type: 'string'},
 			{id: 'note', label: 'Note', type: 'string'},
 			{id: 'timed', label: 'Timed', originalLabel: 'Uses Timer', type: 'boolean'}
-		]);
+		], dateFormat);
 	}
 
 	fiterBySubCategory (subCategory) {
@@ -459,9 +461,9 @@ class Metadata {
 	constructor (data) {
 		this.data = data;
 		if (!this.data.birthdate) {
-			this.birthdate = new Date();
+			this.birthdate = moment();
 		} else {
-			this.birthdate = new Date(this.data.birthdate);
+			this.birthdate = moment(this.data.birthdate);
 		}
 	}
 
@@ -488,7 +490,7 @@ class Metadata {
 	}
 
 	get ageInDays () {
-		return this.ageOnDate(new Date());
+		return this.ageOnDate(moment());
 	}
 
 	get ageInWeeks () {

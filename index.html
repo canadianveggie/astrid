@@ -174,12 +174,14 @@ description: Charts and stuff
 google.charts.load('current', {packages: ['corechart', 'timeline']});
 google.charts.setOnLoadCallback(createCharts);
 
+var dataDateFormat = '{{site.data.config.dataDateFormat}}';
+var dataDateTimeFormat = '{{site.data.config.dataDateTimeFormat}}';
 var metadata = new Metadata({{ site.data.baby | jsonify }});
-var sleeps = new Sleeps({{ site.data.sleeps | jsonify }});
-var feeds = new Feeds({{ site.data.feeds | jsonify }});
-var excretions = new Excretions({{ site.data.excretions | jsonify }});
-var journals = new Journals({{ site.data.journal_entries | jsonify }});
-var growths = new Growths({{ site.data.growths | jsonify }});
+var sleeps = new Sleeps({{ site.data.sleeps | jsonify }}, dataDateTimeFormat);
+var feeds = new Feeds({{ site.data.feeds | jsonify }}, dataDateTimeFormat);
+var excretions = new Excretions({{ site.data.excretions | jsonify }}, dataDateTimeFormat);
+var journals = new Journals({{ site.data.journal_entries | jsonify }}, dataDateTimeFormat);
+var growths = new Growths({{ site.data.growths | jsonify }}, dataDateFormat);
 {% if site.data.baby.gender == 'female' %}
 var weightPercentiles = new GrowthPercentiles({{ site.data.who_growth_percentiles_girls | jsonify }});
 {% else %}
