@@ -9,9 +9,10 @@ id, Time, Vaccine Name, Status, Completed, Notes
 15,10:00:00 01-23-2017,DTaP-HB-Hib-IPV,Vaccinated,1,Diphtheria and tetanus toxoid with acellular pertussis  Hep B  Hib and IPV
 29,11:01:40 01-23-2017,Influenza,Vaccinated,1,
 30,12:00:19 02-23-2017,Influenza Booster,Vaccinated,1,
-12,11:35:00 06-29-2017,MenC Conj,Missed,0,Meningococcal C conjugate
-17,11:35:00 06-29-2017,MMR,Missed,0,Measles mumps and rubella
-18,11:35:00 06-29-2017,Pneumo Conj,Missed,0,Pneumococcal conjugate
-20,11:35:00 06-29-2017,Varicella,Missed,0,Varicella - Chicken Pox
-22,11:35:00 12-29-2017,MMR,Upcoming,0,Measles mumps and rubella
-25,11:53:00 12-29-2017,DTaP-Hib-IPV,Upcoming,0,Diphtheria and tetanus toxoid with acellular pertussis  Hib and IPV Booster
+12,11:35:00 07-08-2017,MenC Conj,Vaccinated,1,Meningococcal C conjugate
+17,11:35:00 07-08-2017,MMR,Vaccinated,1,Measles mumps and rubella
+18,11:35:00 07-08-2017,Pneumo Conj,Vaccinated,1,Pneumococcal conjugate
+20,11:35:00 07-08-2017,Varicella,Vaccinated,1,Varicella - Chicken Pox
+31,14:00:01 12-14-2017,Influenza,Vaccinated,1,
+25,10:30:00 01-06-2018,DTaP-Hib-IPV,Vaccinated,1,Diphtheria and tetanus toxoid with acellular pertussis  Hib and IPV Booster
+32,15:20:18 10-25-2018,Fluzone,Vaccinated,1,
