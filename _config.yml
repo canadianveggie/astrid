@@ -35,6 +35,5 @@ exclude:
   - Gemfile.lock
   - bower.json
   - Gruntfile.js
-  - bower_components
   - package.json
   - node_modules

@@ -142,7 +142,7 @@ DEPENDENCIES
   github-pages (= 105)
 
 RUBY VERSION
-   ruby 2.4.1p111
+   ruby 2.5.3p105
 
 BUNDLED WITH
-   1.14.6
+   1.17.1
