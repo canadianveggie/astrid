@@ -4,7 +4,7 @@ A charting and visualization webapp that takes exported [Feed Baby](https://www.
 
 ## Getting Started
 
-This projected is designed to be easily forked to include your own baby's data. The master branch is just code. All of the data lives on the [gh-pages branch](https://github.com/canadianveggie/astrid/tree/gh-pages) in the _data directory.
+This projected is designed to be easily forked to include your own baby's data. The master branch is just code. All of the data lives on the [gh-pages branch](https://github.com/canadianveggie/astrid/tree/gh-pages) in the _data directory. 
 
 ### Hosting on Github Pages
 
@@ -28,12 +28,12 @@ bundle update && bundle install
 The package.json file includes developer tools (like grunt). Use npm to install them.
 
 ```
-yarn install
+npm install
 ```
 
 To start the local webserver:
 ```
-yarn start
+npm start
 ```
 
 Then open http://127.0.0.1:4000/ in your browser.
