@@ -6,7 +6,7 @@ class MilestonesCarousel {
 	}
 
 	draw () {
-		_.forEach(this.milestones, function(milestone) {
+		_.forEach(this.milestones, (milestone) => {
 			let date = moment(milestone.date);
 			$('<div>')
 				.addClass('milestone')

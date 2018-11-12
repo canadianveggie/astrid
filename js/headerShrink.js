@@ -1,5 +1,5 @@
 function addHeaderShrink() {
-	window.addEventListener('scroll', function(e){
+	window.addEventListener('scroll', (e) => {
 		var distanceY = window.pageYOffset || document.documentElement.scrollTop,
 			shrinkOn = 50,
 			navbar = $(".navbar-nav");
