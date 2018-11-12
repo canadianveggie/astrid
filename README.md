@@ -25,7 +25,7 @@ gem install bundle
 bundle update && bundle install
 ```
 
-The package.json file includes developer tools (like grunt). Use npm to install them.
+The package.json file includes developer tools (like grunt). Use yarn to install them.
 
 ```
 yarn install

@@ -336,7 +336,7 @@ class Sleeps extends Data {
 		// Returns duration of longest n sleeps plush remainder in an array
 		// Result is always an array of n+1 elements
 		function longestDurations (sleeps, n) {
-			let durations = _.pluck(sleeps, 'durationHour').sort(function(a, b) {
+			let durations = _.pluck(sleeps, 'durationHour').sort((a, b) => {
 				return b - a;
 			});
 			if (durations[0] < durations[1]) {
