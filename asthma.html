@@ -1,0 +1,68 @@
+---
+layout: default
+description: Asthma chart
+---
+
+<link rel="stylesheet" type="text/css" href="vendor/slick-carousel/slick.css">
+<link rel="stylesheet" type="text/css" href="assets/slick-theme.css">
+<script src="vendor/jquery/jquery.js"></script>
+<script src="vendor/lodash/lodash.js"></script>
+<script src="vendor/moment/moment.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="vendor/bootstrap-sass/javascripts/bootstrap.js"></script>
+<script src="vendor/slick-carousel/slick.js"></script>
+<script src="vendor/mathjs/math.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/charts.js"></script>
+
+<div>
+<div id="age" class="container-fluid section">
+
+<div id="medicines" class="container-fluid section">
+	<div class="row">
+		<div class="col-xs-12">
+			<h2>Medicines</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="medicinesChart" class="google-chart"></div>
+		</div>
+	</div>
+</div>
+
+</div>
+
+</div>
+
+<script type="text/javascript">
+google.charts.load('current', {packages: ['corechart', 'timeline']});
+google.charts.setOnLoadCallback(createCharts);
+
+var urlParams = new URLSearchParams(window.location.search);
+
+var startDate = urlParams.get('start') && moment(urlParams.get('start'));
+var endDate = urlParams.get('end') && moment(urlParams.get('end'));
+
+var dataDateTimeFormat = '{{site.data.config.dataDateTimeFormat}}';
+
+var medicines = new Medicines({{ site.data.medicine_asthma | jsonify }}, dataDateTimeFormat);
+var medicineRecords = new MedicineRecords({{ site.data.medicine_records | jsonify }}, dataDateTimeFormat);
+
+var charts = [];
+
+function createCharts() {
+	charts.push(new MedicinesChart(document.getElementById('medicinesChart'), medicines, medicineRecords, startDate, endDate));
+
+	drawCharts();
+}
+
+function drawCharts() {
+	_.each(charts, function (chart) {
+		chart.draw();
+	});
+}
+
+$(window).resize(drawCharts);
+
+</script>
