@@ -1,4 +1,27 @@
 Id, Medicine Id, Medicine, Time, Quantity, Unit, Notes
+1189,12,Montelukast (Singulair),19:43:11 11-19-2018,1,ml,
+1188,10,Flovent HFA,17:40:17 11-19-2018,1,ml,
+1186,10,Flovent HFA,07:32:17 11-19-2018,1,ml,
+1187,12,Montelukast (Singulair),18:35:23 11-18-2018,1,ml,
+1184,10,Flovent HFA,17:34:57 11-18-2018,1,ml,
+1185,10,Flovent HFA,08:05:02 11-18-2018,1,ml,
+1183,12,Montelukast (Singulair),18:46:02 11-17-2018,1,ml,
+1182,10,Flovent HFA,17:41:42 11-17-2018,1,ml,
+1181,10,Flovent HFA,09:01:00 11-17-2018,1,ml,
+1179,10,Flovent HFA,17:52:27 11-16-2018,1,ml,
+1180,11,Betaderm 0.05%,07:55:35 11-16-2018,1,ml,
+1178,10,Flovent HFA,07:43:09 11-16-2018,1,ml,
+1177,12,Montelukast (Singulair),19:42:51 11-15-2018,1,ml,
+1176,10,Flovent HFA,17:41:00 11-15-2018,1,ml,
+1175,11,Betaderm 0.05%,07:52:04 11-15-2018,1,ml,
+1174,10,Flovent HFA,07:00:54 11-15-2018,1,ml,
+1172,11,Betaderm 0.05%,19:40:32 11-14-2018,1,ml,Red rash on her lower back
+1173,12,Montelukast (Singulair),19:00:57 11-14-2018,1,ml,
+1169,10,Flovent HFA,17:45:38 11-14-2018,1,ml,
+1170,10,Flovent HFA,07:25:48 11-14-2018,1,ml,
+1171,12,Montelukast (Singulair),19:19:58 11-13-2018,1,ml,
+1168,10,Flovent HFA,17:42:49 11-13-2018,1,ml,Missed the morning
+1167,10,Flovent HFA,17:43:39 11-12-2018,1,ml,
 1166,10,Flovent HFA,07:15:30 11-12-2018,1,ml,
 1164,10,Flovent HFA,18:50:45 11-11-2018,1,ml,
 1165,12,Montelukast (Singulair),18:45:55 11-11-2018,1,ml,
@@ -17,6 +40,7 @@ Id, Medicine Id, Medicine, Time, Quantity, Unit, Notes
 1152,10,Flovent HFA,18:04:49 11-08-2018,1,ml,
 1150,10,Flovent HFA,06:59:01 11-08-2018,1,ml,
 1149,2,Ventolin,06:58:57 11-08-2018,2,ml,
+1206,10,Flovent HFA,19:30:33 11-07-2018,1,ml,
 1148,2,Ventolin,15:00:05 11-07-2018,2,ml,
 1147,2,Ventolin,11:00:55 11-07-2018,2,ml,
 1144,10,Flovent HFA,07:15:58 11-07-2018,1,ml,
@@ -51,6 +75,7 @@ Id, Medicine Id, Medicine, Time, Quantity, Unit, Notes
 1117,12,Montelukast (Singulair),18:50:37 11-03-2018,1,ml,
 1114,2,Ventolin,15:11:23 11-03-2018,3,ml,
 1113,2,Ventolin,10:56:25 11-03-2018,4,ml,
+1205,10,Flovent HFA,07:30:22 11-03-2018,1,ml,
 1109,2,Ventolin,07:28:32 11-03-2018,4,ml,
 1110,2,Ventolin,00:20:41 11-03-2018,4,ml,
 1107,10,Flovent HFA,19:00:31 11-02-2018,1,ml,
@@ -69,7 +94,6 @@ Id, Medicine Id, Medicine, Time, Quantity, Unit, Notes
 1096,2,Ventolin,11:00:55 11-01-2018,4,ml,
 1095,10,Flovent HFA,07:16:37 11-01-2018,1,ml,
 1094,2,Ventolin,07:15:25 11-01-2018,4,ml,
-1093,2,Ventolin,03:03:14 11-01-2018,4,ml,
 1097,2,Ventolin,03:00:05 11-01-2018,4,ml,
 1092,2,Ventolin,23:09:35 10-31-2018,4,ml,
 1091,10,Flovent HFA,18:52:16 10-31-2018,1,ml,
@@ -92,6 +116,7 @@ Id, Medicine Id, Medicine, Time, Quantity, Unit, Notes
 1074,2,Ventolin,17:54:37 10-30-2018,4,ml,
 1073,2,Ventolin,15:00:11 10-30-2018,4,ml,
 1072,2,Ventolin,11:02:48 10-30-2018,4,ml,
+1204,10,Flovent HFA,07:10:33 10-30-2018,1,ml,
 1071,2,Ventolin,07:05:16 10-30-2018,4,ml,
 1070,2,Ventolin,01:00:38 10-30-2018,3,ml,
 1069,10,Flovent HFA,19:01:36 10-29-2018,1,ml,
@@ -101,6 +126,7 @@ Id, Medicine Id, Medicine, Time, Quantity, Unit, Notes
 1065,10,Flovent HFA,17:22:30 10-28-2018,1,ml,
 1064,10,Flovent HFA,08:00:22 10-28-2018,1,ml,
 1063,11,Betaderm 0.05%,19:31:42 10-27-2018,1,ml,
+1203,10,Flovent HFA,19:00:54 10-27-2018,1,ml,
 1062,10,Flovent HFA,08:21:43 10-27-2018,1,ml,
 1061,10,Flovent HFA,19:00:32 10-26-2018,1,ml,
 1059,2,Ventolin,07:45:43 10-26-2018,2,ml,
@@ -115,12 +141,14 @@ Id, Medicine Id, Medicine, Time, Quantity, Unit, Notes
 1051,10,Flovent HFA,17:45:26 10-22-2018,1,ml,
 1050,2,Ventolin,15:04:10 10-22-2018,2,ml,Coughing
 1049,10,Flovent HFA,08:00:12 10-22-2018,1,ml,
+1202,10,Flovent HFA,19:00:39 10-21-2018,1,ml,
 1048,10,Flovent HFA,07:37:59 10-21-2018,1,ml,
 1047,2,Ventolin,07:37:04 10-21-2018,2,ml,
 1046,10,Flovent HFA,17:48:05 10-20-2018,1,ml,
 1045,2,Ventolin,17:47:45 10-20-2018,5,ml,
 1044,10,Flovent HFA,07:56:27 10-20-2018,1,ml,
 1043,2,Ventolin,07:56:24 10-20-2018,2,ml,
+1201,10,Flovent HFA,19:00:29 10-19-2018,1,ml,
 1042,2,Ventolin,15:00:56 10-19-2018,2,ml,
 1041,2,Ventolin,11:00:48 10-19-2018,2,ml,
 1034,11,Betaderm 0.05%,08:04:16 10-19-2018,1,ml,
@@ -300,6 +328,7 @@ Id, Medicine Id, Medicine, Time, Quantity, Unit, Notes
 866,10,Flovent HFA,07:30:42 09-05-2018,1,ml,
 865,10,Flovent HFA,17:59:02 09-04-2018,1,ml,
 864,10,Flovent HFA,07:18:57 09-04-2018,1,ml,
+1200,10,Flovent HFA,19:00:12 09-03-2018,1,ml,
 863,10,Flovent HFA,06:33:52 09-03-2018,1,ml,
 862,10,Flovent HFA,17:58:42 09-02-2018,1,ml,
 861,10,Flovent HFA,07:23:10 09-02-2018,1,ml,
@@ -1084,28 +1113,38 @@ Id, Medicine Id, Medicine, Time, Quantity, Unit, Notes
 70,7,Ibuprofen,04:11:45 12-24-2017,2.5,ml,
 69,7,Ibuprofen,17:17:10 12-23-2017,2.5,ml,
 68,7,Ibuprofen,10:35:33 12-23-2017,2.5,ml,100 mg of Motrin infant
-65,2,Ventolin,01:30:44 12-22-2017,1,ml,
+65,2,Ventolin,01:30:44 12-22-2017,2,ml,
 67,5,Acetaminophen,18:30:31 12-21-2017,1.5,ml,
-66,2,Ventolin,16:00:58 12-21-2017,1,ml,
-64,2,Ventolin,05:45:32 12-20-2017,1,ml,
-63,2,Ventolin,19:15:09 12-19-2017,1,ml,
-62,2,Ventolin,15:08:21 12-19-2017,1,ml,
-61,2,Ventolin,11:08:24 12-19-2017,1,ml,
-60,2,Ventolin,06:59:22 12-19-2017,1,ml,
-59,2,Ventolin,03:25:21 12-19-2017,1,ml,
-58,2,Ventolin,23:05:29 12-18-2017,1,ml,Slept through it.
-57,2,Ventolin,19:05:03 12-18-2017,1,ml,
-56,2,Ventolin,15:15:44 12-18-2017,1,ml,
-55,2,Ventolin,07:50:50 12-18-2017,1,ml,3 puffs Before: 22 breaths per minute
-54,2,Ventolin,03:15:06 12-18-2017,1,ml,Before: 22 breaths per minute After: 25 breaths per minute and trouble falling back asleep.
+66,2,Ventolin,16:00:58 12-21-2017,2,ml,
+64,2,Ventolin,05:45:32 12-20-2017,2,ml,
+63,2,Ventolin,19:15:09 12-19-2017,2,ml,
+62,2,Ventolin,15:08:21 12-19-2017,2,ml,
+61,2,Ventolin,11:08:24 12-19-2017,2,ml,
+60,2,Ventolin,06:59:22 12-19-2017,2,ml,
+59,2,Ventolin,03:25:21 12-19-2017,2,ml,
+58,2,Ventolin,23:05:29 12-18-2017,2,ml,Slept through it.
+57,2,Ventolin,19:05:03 12-18-2017,2,ml,
+56,2,Ventolin,15:15:44 12-18-2017,2,ml,
+55,2,Ventolin,07:50:50 12-18-2017,3,ml,3 puffs Before: 22 breaths per minute
+54,2,Ventolin,03:15:06 12-18-2017,2,ml,Before: 22 breaths per minute After: 25 breaths per minute and trouble falling back asleep.
 53,2,Ventolin,23:15:46 12-17-2017,1,ml,Fell right back asleep after. After: 22 breaths per minute.
-50,2,Ventolin,19:00:26 12-17-2017,1,ml,3 puffs
-49,2,Ventolin,15:00:18 12-17-2017,1,ml,
-48,2,Ventolin,11:00:00 12-17-2017,1,ml,
-47,2,Ventolin,07:00:09 12-17-2017,1,ml,2 puffs
-51,6,Dexamethasone,16:30:26 12-16-2017,2,ml,6 mg in hospital
-94,8,Atrovent,11:45:34 12-16-2017,1,ml,At hospital
-52,2,Ventolin,11:45:04 12-16-2017,1,ml,7 puffs
+50,2,Ventolin,19:00:26 12-17-2017,3,ml,3 puffs
+49,2,Ventolin,15:00:18 12-17-2017,2,ml,
+48,2,Ventolin,11:00:00 12-17-2017,2,ml,
+47,2,Ventolin,07:00:09 12-17-2017,2,ml,2 puffs
+1199,2,Ventolin,03:00:35 12-17-2017,2,ml,
+1198,2,Ventolin,23:00:46 12-16-2017,2,ml,
+1197,2,Ventolin,19:00:15 12-16-2017,2,ml,
+51,6,Dexamethasone,16:30:26 12-16-2017,6,ml,6 mg in hospital
+1196,2,Ventolin,16:00:56 12-16-2017,4,ml,
+1195,2,Ventolin,14:30:32 12-16-2017,4,ml,
+1194,2,Ventolin,13:30:08 12-16-2017,4,ml,
+1192,2,Ventolin,12:25:54 12-16-2017,7,ml,
+1193,8,Atrovent,12:25:47 12-16-2017,3,ml,
+1191,8,Atrovent,12:05:48 12-16-2017,3,ml,
+1190,2,Ventolin,12:05:19 12-16-2017,7,ml,
+94,8,Atrovent,11:45:34 12-16-2017,3,ml,At hospital
+52,2,Ventolin,11:45:04 12-16-2017,7,ml,7 puffs
 45,5,Acetaminophen,03:00:53 12-16-2017,1,ml,
 46,6,Dexamethasone,16:30:06 12-15-2017,10,ml,1 mg
 44,5,Acetaminophen,03:30:57 12-15-2017,1,ml,
