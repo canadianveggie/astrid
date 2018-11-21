@@ -279,11 +279,11 @@ class Growths extends Data {
 
 		_.each(this.data, (growth) => {
 			if (growth.weight) {
-				let age = metadata.ageOnDate(growth.day);
+				let days = metadata.daysOldOnDate(growth.day);
 				let row = [growth.day.toDate(),
 					this.convertToKg(growth.weight, growth.weightUnit),
-					percentilesByAge.percentileAtAge(age, 25),
-					percentilesByAge.percentileAtAge(age, 75)
+					percentilesByAge.percentileAtAge(days, 25),
+					percentilesByAge.percentileAtAge(days, 75)
 				];
 				dataTable.addRow(row);
 			}
@@ -534,30 +534,47 @@ class Metadata {
 		return this.birthdate;
 	}
 
-	ageOnDate (date) {
-		return (date - this.birthdate) / 24/60/60/1000;
-	}
-
-	ageOnDateFormatted (date) {
-		let days = this.ageOnDate(date);
-		if (days < 1) {
-			return math.round(days * 24, 0) + ' hours';
-		}
-		else if (days < 1.5) {
-			return '1 day';
-		}
-		else if (days < 28) {
-			return math.round(days, 0) + ' days';
-		}
-		return math.round(days / 7, 0) + ' weeks';
-	}
-
-	get ageInDays () {
+	get age () {
 		return this.ageOnDate(moment());
 	}
 
-	get ageInWeeks () {
-		return math.round(this.ageInDays / 7, 1);
+	daysOldOnDate (date) {
+		return (date - this.birthdate) / 24/60/60/1000;
+	}
+
+	ageOnDate (date) {
+		const days = this.daysOldOnDate(date);
+		let value;
+		let unit;
+		if (days < 1) {
+			value = math.round(days * 24, 0);
+			unit = 'hour';
+		} else if (days < 28) {
+			value = math.round(days, 0);
+			unit = 'day';
+		} else if (days < 365) {
+			value = math.floor(days / 7);
+			unit = 'week';
+		} else if (days < 365 * 3) {
+			value = math.floor(days / 365 * 12);
+			unit = 'month';
+		} else {
+			value = math.floor(days / 365);
+			unit = 'year';
+		}
+		if (value !== 1) {
+			unit = unit + 's';
+		}
+		return { value, unit };
+	}
+
+	ageOnDateFormatted (date) {
+		const age = this.ageOnDate(date);
+		return `${age.value} ${age.unit}`;
+	}
+
+	get ageInDays () {
+		return this.daysOldOnDate(moment());
 	}
 }
 
