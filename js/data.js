@@ -84,7 +84,7 @@ class Data {
 
 	largest(property) {
 		return _.chain(this.data)
-			.pluck(property)
+			.map(property)
 			.max()
 			.value();
 	}
@@ -336,7 +336,7 @@ class Sleeps extends Data {
 		// Returns duration of longest n sleeps plush remainder in an array
 		// Result is always an array of n+1 elements
 		function longestDurations (sleeps, n) {
-			let durations = _.pluck(sleeps, 'durationHour').sort((a, b) => {
+			let durations = _.map(sleeps, 'durationHour').sort((a, b) => {
 				return b - a;
 			});
 			if (durations[0] < durations[1]) {
@@ -361,7 +361,7 @@ class Sleeps extends Data {
 		dataTable.addColumn({id: 'remainder', label: 'Remainder', type: 'number'});
 
 		_.each(this.sleepsByDay, (sleepDay, day) => {
-			let halfDaySleep = _.where(sleepDay, {'type': type});
+			let halfDaySleep = _.map(sleepDay, {'type': type});
 			let sleepDurations = longestDurations(halfDaySleep, 2);
 			sleepDurations.unshift(new Date(day));
 
@@ -410,10 +410,73 @@ class Journals extends Data {
 	}
 
 	fiterBySubCategory (subCategory) {
-		return _.where(this.data, {})
+		return _.map(this.data, {})
 	}
 }
 
+class Medicines extends Data {
+	constructor (data, dateFormat) {
+		super(data, [
+			{id: 'id', label: 'id', type: 'number'},
+			{id: 'name', label: 'Medicine Name', type: 'string'},
+			{id: 'color', label: 'Color Code', type: 'string'},
+			{id: 'defaultQuantity', label: 'Default Quantity', type: 'number'},
+			{id: 'type', label: 'Default Measurement Type', type: 'string'},
+			{id: 'image', label: 'Image Name', type: 'string'}
+		], dateFormat);
+	}
+}
+
+class MedicineRecords extends Data {
+	constructor (data, dateFormat) {
+		super(data, [
+			{id: 'id', label: 'id', type: 'number'},
+			{id: 'medicineId', label: 'Medicine Id', type: 'number'},
+			{id: 'medicineName', label: 'Medicine', type: 'string'},
+			{id: 'time', label: 'Time', type: 'datetime'},
+			{id: 'day', label: 'Day', derivativeFn: (cleansedData, rawRow) => {
+				return cleansedData['time'].clone().startOf('day');
+			}, type: 'date'},
+			{id: 'quantity', label: 'Quantity', type: 'number'},
+			{id: 'unit', label: 'Unit', type: 'string'},
+			{id: 'notes', label: 'Notes', type: 'string'}
+		], dateFormat);
+	}
+
+	get medicinesByDay () {
+		return _.groupBy(this.data, 'day', this);
+	}
+
+	medicinesPerDay (medicines, startDate, endDate) {
+		var dataTable = new google.visualization.DataTable();
+		dataTable.addColumn({id: 'day', label: 'Day', type: 'date'});
+		const medicineColumnIndices = new Map();
+		_.each(medicines.data, (medicine) => {
+			medicineColumnIndices[medicine.id] = dataTable.getNumberOfColumns();
+			dataTable.addColumn({id: 'medicine' + medicine.id, label: medicine.name, type: 'number'});
+		});
+
+		const days = _.map(this.data, 'day');
+		startDate = startDate || _.min(days);
+		endDate = endDate || _.max(days);
+		let day = startDate && startDate.clone();
+		const medicinesGrouped = this.medicinesByDay;
+		while (day <= endDate) {
+			let row = [new Date(day)].concat(new Array(medicines.data.length).fill(0));
+			const medicineRecords = medicinesGrouped[day];
+			_.each(medicineRecords, (medicineRecord) => {
+				const index = medicineColumnIndices[medicineRecord.medicineId];
+				if (index) {
+					row[index] += medicineRecord.quantity;
+				}
+			});
+			dataTable.addRow(row);
+			day = day.clone().add(1, 'day');
+		}
+
+		return dataTable;
+	}
+}
 
 class TimelineData {
 	constructor (datas, startDate, endDate) {

@@ -123,3 +123,20 @@ class WeightChart extends Chart {
 	}
 }
 
+class MedicinesChart extends Chart {
+	constructor (div, medicines, medicineRecords, startDate, endDate) {
+		var chart = new google.visualization.SteppedAreaChart(div);
+
+		var dataTable = medicineRecords.medicinesPerDay(medicines, startDate, endDate);
+		var options = {
+			height: 600,
+			connectSteps: false,
+			isStacked: true,
+			areaOpacity: 1,
+			legend: { position: 'bottom' },
+		};
+
+		super(chart, dataTable, options);
+	}
+}
+

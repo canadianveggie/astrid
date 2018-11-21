@@ -75,7 +75,7 @@ description: Charts and stuff
 </nav>
 
 <div class="sections">
-<div id="age" class="container-fluid section">
+<div id="age" class="container-fluid section firstSection">
 	{% if site.data.milestones.size > 0 %}
 	<div class="row">
 		<div class="col-xs-12">
@@ -166,6 +166,19 @@ description: Charts and stuff
 	</div>
 </div>
 
+<div id="medicines" class="container-fluid section">
+	<div class="row">
+		<div class="col-xs-12">
+			<h2>Medicines</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="medicinesChart" class="google-chart"></div>
+		</div>
+	</div>
+</div>
+
 </div>
 
 </div>
@@ -174,6 +187,11 @@ description: Charts and stuff
 google.charts.load('current', {packages: ['corechart', 'timeline']});
 google.charts.setOnLoadCallback(createCharts);
 
+var urlParams = new URLSearchParams(window.location.search);
+
+var startDate = urlParams.get('start') && moment(urlParams.get('start'));
+var endDate = urlParams.get('end') && moment(urlParams.get('end'));
+
 var dataDateFormat = '{{site.data.config.dataDateFormat}}';
 var dataDateTimeFormat = '{{site.data.config.dataDateTimeFormat}}';
 var metadata = new Metadata({{ site.data.baby | jsonify }});
@@ -181,6 +199,8 @@ var sleeps = new Sleeps({{ site.data.sleeps | jsonify }}, dataDateTimeFormat);
 var feeds = new Feeds({{ site.data.feeds | jsonify }}, dataDateTimeFormat);
 var excretions = new Excretions({{ site.data.excretions | jsonify }}, dataDateTimeFormat);
 var journals = new Journals({{ site.data.journal_entries | jsonify }}, dataDateTimeFormat);
+var medicines = new Medicines({{ site.data.medicines | jsonify }}, dataDateTimeFormat);
+var medicineRecords = new MedicineRecords({{ site.data.medicine_records | jsonify }}, dataDateTimeFormat);
 var growths = new Growths({{ site.data.growths | jsonify }}, dataDateFormat);
 {% if site.data.baby.gender == 'female' %}
 var weightPercentiles = new GrowthPercentiles({{ site.data.who_growth_percentiles_girls | jsonify }});
@@ -192,7 +212,7 @@ $("#ageKPI").html(metadata.ageInWeeks);
 $("#sleepHoursKPI").html(Math.round(sleeps.totalHours));
 $("#feedingsKPI").html(feeds.data.length);
 $("#diapersKPI").html(excretions.data.length);
-$("#bathsKPI").html(_.where(journals.data, {type: "Bath"}).length);
+$("#bathsKPI").html(_.filter(journals.data, {type: "Bath"}).length);
 $("#growthKPI").html(growths.weightChange.toFixed(1) + "x");
 
 var milestones = {{ site.data.milestones | jsonify }};
@@ -219,6 +239,7 @@ function createCharts() {
 	charts.push(new FeedingsChart(document.getElementById('feedingsChart'), feeds));
 	charts.push(new DiapersChart(document.getElementById('diapersChart'), excretions));
 	charts.push(new WeightChart(document.getElementById('weightChart'), growths));
+	charts.push(new MedicinesChart(document.getElementById('medicinesChart'), medicines, medicineRecords, startDate, endDate));
 
 	drawCharts();
 }
