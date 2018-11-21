@@ -32,7 +32,7 @@ description: Charts and stuff
 			{% endif %}
 			</a>
 			<h4 class="kpi-metric hidden-xs" id="ageKPI"></h4>
-			<span class="kpi-description text-muted hidden-xs">Weeks old</span>
+			<span class="kpi-description text-muted hidden-xs" id="ageKPIUnits"></span>
 		</div>
 		<div class="nav col-xs-2 kpi">
 			<a href="#sleep">
@@ -208,7 +208,8 @@ var weightPercentiles = new GrowthPercentiles({{ site.data.who_growth_percentile
 var weightPercentiles = new GrowthPercentiles({{ site.data.who_growth_percentiles_boys | jsonify }});
 {% endif %}
 
-$("#ageKPI").html(metadata.ageInWeeks);
+$("#ageKPI").html(metadata.age.value);
+$("#ageKPIUnits").html(metadata.age.unit);
 $("#sleepHoursKPI").html(Math.round(sleeps.totalHours));
 $("#feedingsKPI").html(feeds.data.length);
 $("#diapersKPI").html(excretions.data.length);
