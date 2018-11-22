@@ -361,7 +361,7 @@ class Sleeps extends Data {
 		dataTable.addColumn({id: 'remainder', label: 'Remainder', type: 'number'});
 
 		_.each(this.sleepsByDay, (sleepDay, day) => {
-			let halfDaySleep = _.map(sleepDay, {'type': type});
+			let halfDaySleep = _.filter(sleepDay, {'type': type});
 			let sleepDurations = longestDurations(halfDaySleep, 2);
 			sleepDurations.unshift(new Date(day));
 
