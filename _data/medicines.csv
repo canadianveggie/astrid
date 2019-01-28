@@ -9,5 +9,6 @@ id, Medicine Name, Color Code, Default Quantity, Default Measurement Type, Image
 9,Alvesco,#985B29,2,METRIC,BOTTLE_BLACK_1
 10,Flovent HFA,#f27737,1,METRIC,BOTTLE_BLACK_1
 11,Betaderm 0.05%,#727159,1,METRIC,CREAM_YELLOW
-12,Montelukast (Singulair),#B69BBC,1,METRIC,PANADOL_3
+12,Montelukast,#B69BBC,1,METRIC,PANADOL_3
 13,Prednisolone,#3745F2,13,METRIC,BOTTLE_RED_1
+14,Advair,#6428D0,1,METRIC,BOTTLE_BLACK_1
