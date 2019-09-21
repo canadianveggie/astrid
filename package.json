@@ -10,7 +10,20 @@
   "author": "Christopher Porter <christopher.porter@yardi.com>",
   "license": "ISC",
   "devDependencies": {
-    "grunt": "^1.0.3",
+    "grunt": "^1.0.4",
     "grunt-bower-task": "^0.5.0"
+  },
+  "dependencies": {
+    "@bower_components/bootstrap-sass": "twbs/bootstrap-sass#^3.3.7",
+    "@bower_components/github-fork-ribbon-css": "simonwhitaker/github-fork-ribbon-css#^0.2.0",
+    "@bower_components/jquery": "jquery/jquery-dist#^3.1.1",
+    "@bower_components/lodash": "lodash/lodash#^4.17.11",
+    "@bower_components/mathjs": "josdejong/mathjs#^3.8.1",
+    "@bower_components/moment": "moment/moment#^2.16.0",
+    "@bower_components/slick-carousel": "kenwheeler/slick#^1.6.0",
+    "@bower_components/underscore": "jashkenas/underscore#^1.8.3"
+  },
+  "engines": {
+    "yarn": ">= 1.0.0"
   }
 }
